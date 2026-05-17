@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP故事 - 扎染文化数字平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 故事库页面特定样式 - Consistent with index.html */
+        main.container {
+            padding: 3rem 0;
+        }
+        main.container h1 {
+            text-align: center;
+            margin-bottom: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        main.container p {
+            text-align: center;
+            color: var(--dark-gray-color);
+            margin-bottom: 2.5rem;
+        }
+
+        .culture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 2rem;
+        }
+
+        .culture-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--primary-color);
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        .culture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .culture-card:nth-child(2n) {
+            border-top-color: var(--secondary-color);
+        }
+
+        .culture-card:nth-child(3n) {
+            border-top-color: var(--accent-color-1);
+        }
+
+        .culture-header {
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .culture-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .culture-card:nth-child(2n) .culture-icon {
+            color: var(--secondary-color);
+        }
+
+        .culture-card:nth-child(3n) .culture-icon {
+            color: var(--accent-color-1);
+        }
+
+        .culture-title {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .culture-desc {
+            color: var(--dark-gray-color);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .culture-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--medium-gray-color);
+        }
+
+        .contribute-section {
+            background: #f5f5f5;
+            padding: 3rem 0;
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .contribute-btn {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .contribute-btn:hover {
+            background-color: var(--primary-dark-color);
+        }
+
+        /* 扎染故事卡片特色样式 */
+        .tie-dye-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tie-dye-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4b6cb7, #182848, #4b6cb7);
+            background-size: 200% 100%;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar .desktop-nav, .navbar .user-actions {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .culture-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                gap: 20px;
+            }
+
+            .culture-card {
+                max-width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉容器 -->
+    <div id="header"></div>
+
+    <main class="container">
+        <h1>探索多元文化IP故事</h1>
+        <p>发现世界各地丰富多彩的文化遗产与创意表达</p>
+
+        <!-- 在主页面中的culture-grid部分修改为： -->
+<div class="culture-grid">
+    <!-- 扎染艺术入口卡片 -->
+    <a href="story.html" class="culture-card tie-dye-card">
+        <div class="culture-header">
+            <div class="culture-icon"><i class="fas fa-palette"></i></div>
+            <h3 class="culture-title">扎染艺术</h3>
+            <p class="culture-desc">中国传统染色技艺的现代传承与创新</p>
+            <div class="culture-stats">
+                <span>2个角色</span>
+                <span>4个故事</span>
+            </div>
+        </div>
+    </a>
+
+    <!-- 其他文化卡片保持不变 -->
+    <div class="culture-card">
+        <div class="culture-header">
+            <div class="culture-icon"><i class="fas fa-mask"></i></div>
+            <h3 class="culture-title">京剧脸谱</h3>
+            <p class="culture-desc">中国传统戏曲的视觉符号系统</p>
+            <div class="culture-stats">
+                <span>8个角色</span>
+                <span>15个故事</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+        <!-- 贡献者部分 -->
+        <div class="contribute-section">
+            <h2>拥有文化IP想要分享？</h2>
+            <p>我们欢迎经过认证的文化传承者贡献内容</p>
+            <a href="become-contributor.html" class="contribute-btn">
+                <i class="fas fa-plus"></i> 申请成为贡献者
+            </a>
+        </div>
+    </main>
+
+    <!-- 页脚容器 -->
+    <div id="footer"></div>
+
+    <script>
+        // 加载公共部分
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    // 初始化导航栏脚本
+                    initHeaderScripts();
+                })
+                .catch(error => {
+                    console.error('Error loading header:', error);
+                    document.getElementById('header').innerHTML = '<div class="container"><a href="index.html" class="logo">檐下风铃</a></div>';
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = '<footer><div class="container"><p>&copy; 2023 檐下风铃</p></div></footer>';
+                });
+        });
+
+        // 初始化导航栏脚本
+        function initHeaderScripts() {
+            // 移动菜单切换
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+
+            if (mobileMenuBtn && mobileNavMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true' || false;
+                    mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+                    mobileNavMenu.classList.toggle('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+            }
+
+            // 导航高亮
+            const currentLocation = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinksDesktop = document.querySelectorAll('.navbar .desktop-nav .nav-links a');
+            const navLinksMobile = document.querySelectorAll('.mobile-nav-menu .nav-links a');
+
+            function setActiveLink(links) {
+                links.forEach(link => {
+                    const linkPage = link.getAttribute('href').split('/').pop() || 'index.html';
+                    if (linkPage === currentLocation) {
+                        link.classList.add('active-link');
+                    } else {
+                        link.classList.remove('active-link');
+                    }
+                });
+            }
+            setActiveLink(navLinksDesktop);
+            setActiveLink(navLinksMobile);
+        }
+    </script>
+</body>
+</html>

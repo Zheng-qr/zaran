@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文创商城 - 檐下风铃扎染文化平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* 基础样式 - 合并自 index.html 和 shop.html */
+        :root {
+            /* 主品牌色 */
+    --primary-color: #3A7BD5;
+    --secondary-color: #00A896;
+    --accent-color-1: #F7B733;
+    --accent-color-2: #E85A4F;
+    --accent-color-3: #8E44AD;
+
+    /* 中性色 */
+    --light-color: #f8f9fa;
+    --medium-gray-color: #0675e4;
+    --dark-gray-color: #6c757d;
+    --dark-color: #2c3e50;
+
+    /* 文本颜色 */
+    --text-color: #343a40;
+    --text-light-color: #ffffff;
+
+    --border-radius: 6px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.7;
+            background-color: #f4f7f6; /* 浅灰色背景 */
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        /* 导航栏 - 合并自 index.html */
+        .navbar {
+            background-color: var(--dark-color);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--accent-color-1);
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            color: var(--text-light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 5px 0;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active-link {
+            color: var(--accent-color-1);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-actions a {
+            color: var(--text-light-color);
+            margin-left: 20px;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+        .user-actions a:hover {
+            color: var(--accent-color-1);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light-color);
+            font-size: 1.6rem;
+            cursor: pointer;
+        }
+
+        /* 移动端展开的导航菜单样式 */
+        .mobile-nav-menu {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            background-color: var(--dark-color);
+            position: absolute;
+            top: 100%;
+            left: 0;
+            padding: 10px 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 999;
+        }
+        .mobile-nav-menu.active {
+            display: flex;
+        }
+        .mobile-nav-menu .nav-links {
+            flex-direction: column;
+            width: 100%;
+        }
+        .mobile-nav-menu .nav-links li {
+            margin: 10px 0;
+            text-align: center;
+        }
+        .mobile-nav-menu .user-actions {
+            flex-direction: row;
+            justify-content: center;
+            padding-top: 10px;
+            margin-top: 10px;
+            border-top: 1px solid var(--dark-gray-color);
+        }
+         .mobile-nav-menu .user-actions a {
+            margin: 0 15px;
+         }
+
+        /* 页面头部 - shop.html 独有 */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 内容区域 */
+        .page-content {
+            padding: 2rem 0;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+        }
+
+        /* 商品筛选区 */
+        .shop-filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.5rem;
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+            width: 100%;
+        }
+
+        .search-box {
+            display: flex;
+        }
+
+        .search-box input {
+            flex: 1;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .search-box button {
+            padding: 0 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+            cursor: pointer;
+        }
+
+        /* 商品展示区 */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-image {
+            height: 200px;
+            background-color: var(--light-color);
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-color-2);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.8rem;
+        }
+
+        .product-info {
+            padding: 1rem;
+        }
+
+        .product-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-author {
+            color: var(--dark-gray-color);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-weight: 600;
+            color: var(--accent-color-2);
+            margin-bottom: 1rem;
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: var(--dark-gray-color);
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .product-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2a68c4;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(58, 123, 213, 0.1);
+        }
+
+        /* 版权交易区 */
+        .copyright-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--medium-gray-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* 分页控件 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .page-item {
+            margin: 0 0.25rem;
+        }
+
+        .page-link {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        .page-link:hover {
+            background-color: var(--light-color);
+        }
+
+        .page-item.active .page-link {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* 页脚 - 合并自 index.html */
+        footer {
+            background: var(--dark-color);
+            color: var(--medium-gray-color);
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--accent-color-1);
+            font-size: 1.2rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section a {
+            color: var(--medium-gray-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--accent-color-1);
+        }
+        .footer-section p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .social-icons {
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin-right: 12px;
+            font-size: 1.3rem;
+            color: var(--text-light-color);
+            transition: color 0.3s;
+        }
+        .social-icons a:hover {
+            color: var(--accent-color-1);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #4a4a4a;
+            font-size: 0.85rem;
+        }
+
+        /* 响应式设计 - 合并自 index.html 和 shop.html */
+        @media (max-width: 992px) {
+            /* 轮播图相关样式（此处未用，但保留以防将来添加） */
+            .slide-content h1 {
+                font-size: 2.5rem;
+            }
+            .slide-content p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar .nav-links, .navbar .user-actions {
+                display: none;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            /* 轮播图相关样式（此处未用，但保留以防将来添加） */
+            .carousel-banner {
+                height: 55vh;
+                min-height: 350px;
+            }
+            .slide-content h1 {
+                font-size: 1.8rem;
+            }
+            .slide-content p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            .slide-content .btn-slide {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .carousel-prev, .carousel-next {
+                padding: 10px;
+                font-size: 1.2rem;
+            }
+            .carousel-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            /* Shop specific responsive */
+            .shop-filters {
+                grid-template-columns: 1fr;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            /* 快速导航相关样式（此处未用，但保留以防将来添加） */
+            .quick-nav-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 15px;
+            }
+            .quick-nav-item {
+                padding: 15px 10px;
+            }
+            .quick-nav-item i {
+                font-size: 2rem;
+                width: 50px;
+                height: 50px;
+                line-height: 50px;
+            }
+            .quick-nav-item span {
+                font-size: 0.85rem;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-section ul {
+                padding-left: 0;
+            }
+            .social-icons {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 - 与 index.html 保持一致 -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">檐下风铃</a>
+            <div class="desktop-nav">
+                <ul class="nav-links">
+                    <li><a href="index.html">首页</a></li>
+                    <li><a href="ip-story.html">IP故事</a></li>
+                    <li><a href="knowledge.html">科普百科</a></li>
+                    <li><a href="pattern-library.html">基因库</a></li>
+                    <li><a href="workshop.html">创意工坊</a></li>
+                    <li><a href="shop.html">文创商城</a></li>
+                    <li><a href="community.html">共创社区</a></li>
+                    <li><a href="my.html">我的</a></li>
+                </ul>
+            </div>
+            <div class="user-actions">
+                <a href="user.html" title="用户中心"><i class="fas fa-user"></i></a>
+                <a href="#" title="消息"><i class="fas fa-envelope"></i></a>
+                <a href="about.html" title="关于我们"><i class="fas fa-info-circle"></i></a>
+            </div>
+            <button class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- 移动端菜单容器 -->
+        <div class="mobile-nav-menu">
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="ip-story.html">IP故事</a></li>
+                <li><a href="knowledge.html">科普百科</a></li>
+                <li><a href="pattern-library.html">基因库</a></li>
+                <li><a href="workshop.html">创意工坊</a></li>
+                <li><a href="shop.html">文创商城</a></li>
+                <li><a href="community.html">共创社区</a></li>
+                <li><a href="my.html">我的</a></li>
+            </ul>
+            <div class="user-actions">
+                <a href="user.html" title="用户中心"><i class="fas fa-user"></i></a>
+                <a href="#" title="消息"><i class="fas fa-envelope"></i></a>
+                <a href="about.html" title="关于我们"><i class="fas fa-info-circle"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 页面内容 -->
+    <main>
+        <div class="page-header">
+            <h1>文创商城</h1>
+            <p>发现独特的扎染文创作品，支持原创设计</p>
+        </div>
+
+        <div class="page-content container">
+            <!-- 商品筛选区 -->
+            <div class="section">
+                <div class="shop-filters">
+                    <div class="filter-group">
+                        <label for="category">商品分类</label>
+                        <select id="category">
+                            <option value="all">全部商品</option>
+                            <option value="clothing">服饰类</option>
+                            <option value="accessories">配饰类</option>
+                            <option value="home">家居用品</option>
+                            <option value="art">艺术品</option>
+                            <option value="material">原材料</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="price-range">价格区间</label>
+                        <select id="price-range">
+                            <option value="all">全部</option>
+                            <option value="0-100">0-100元</option>
+                            <option value="100-300">100-300元</option>
+                            <option value="300-500">300-500元</option>
+                            <option value="500+">500元以上</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="sort">排序方式</label>
+                        <select id="sort">
+                            <option value="popular">最受欢迎</option>
+                            <option value="newest">最新上架</option>
+                            <option value="price-low">价格从低到高</option>
+                            <option value="price-high">价格从高到低</option>
+                            <option value="sales">销量最高</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="search">搜索商品</label>
+                        <div class="search-box">
+                            <input type="text" id="search" placeholder="输入商品名称或作者">
+                            <button type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 商品展示区 -->
+                <div class="products-grid">
+                    <!-- 商品1 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9034.JPG')">
+                            <span class="product-badge">热销</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">蓝染云纹手工围巾 - 传统扎染工艺</div>
+                            <div class="product-author">作者: 张染艺</div>
+                            <div class="product-price">¥298 <span class="original-price">¥398</span></div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline"><i class="far fa-heart"></i></button>
+                                <button class="btn btn-primary">加入购物车</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 商品2 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9063.JPG')">
+                            <span class="product-badge">新品</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">现代几何扎染纯棉T恤</div>
+                            <div class="product-author">作者: 李纹创</div>
+                            <div class="product-price">¥168</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline"><i class="far fa-heart"></i></button>
+                                <button class="btn btn-primary">加入购物车</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 商品3 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9064.JPG')">
+                            <span class="product-badge">限量</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">传统纹样扎染靠垫套(一对装)</div>
+                            <div class="product-author">作者: 王艺坊</div>
+                            <div class="product-price">¥128</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline"><i class="far fa-heart"></i></button>
+                                <button class="btn btn-primary">加入购物车</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 商品4 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9065.JPG')"></div>
+                        <div class="product-info">
+                            <div class="product-title">山水意境扎染装饰画(40×60cm)</div>
+                            <div class="product-author">作者: 陈染墨</div>
+                            <div class="product-price">¥580</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline"><i class="far fa-heart"></i></button>
+                                <button class="btn btn-primary">加入购物车</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 商品5 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9066.JPG')"></div>
+                        <div class="product-info">
+                            <div class="product-title">民族风扎染餐桌布(140×200cm)</div>
+                            <div class="product-author">作者: 赵设纹</div>
+                            <div class="product-price">¥320</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline"><i class="far fa-heart"></i></button>
+                                <button class="btn btn-primary">加入购物车</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 商品6 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9067.JPG')">
+                            <span class="product-badge">DIY</span>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">扎染DIY入门材料包(含教程)</div>
+                            <div class="product-author">作者: 钱创艺</div>
+                            <div class="product-price">¥98</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline"><i class="far fa-heart"></i></button>
+                                <button class="btn btn-primary">加入购物车</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分页控件 -->
+                <div class="pagination">
+                    <div class="page-item">
+                        <a href="#" class="page-link"><i class="fas fa-chevron-left"></i></a>
+                    </div>
+                    <div class="page-item active">
+                        <a href="#" class="page-link">1</a>
+                    </div>
+                    <div class="page-item">
+                        <a href="#" class="page-link">2</a>
+                    </div>
+                    <div class="page-item">
+                        <a href="#" class="page-link">3</a>
+                    </div>
+                    <div class="page-item">
+                        <a href="#" class="page-link"><i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版权交易区 -->
+            <div class="section">
+                <h2>版权交易</h2>
+                <p>购买纹样设计版权，用于您的创作和生产</p>
+
+                <div class="copyright-tabs">
+                    <div class="tab active">全部版权</div>
+                    <div class="tab">商用授权</div>
+                    <div class="tab">个人授权</div>
+                    <div class="tab">独家授权</div>
+                </div>
+
+                <div class="products-grid">
+                    <!-- 版权作品1 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9056.JPG')"></div>
+                        <div class="product-info">
+                            <div class="product-title">云水纹设计版权(商用授权)</div>
+                            <div class="product-author">作者: 赵设纹</div>
+                            <div class="product-price">¥1,200</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline">查看详情</button>
+                                <button class="btn btn-primary">购买版权</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 版权作品2 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9057.JPG')"></div>
+                        <div class="product-info">
+                            <div class="product-title">几何拼接纹样(个人授权)</div>
+                            <div class="product-author">作者: 钱创艺</div>
+                            <div class="product-price">¥980</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline">查看详情</button>
+                                <button class="btn btn-primary">购买版权</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 版权作品3 -->
+                    <div class="product-card">
+                        <div class="product-image" style="background-image: url('image/IMG_9058.JPG')"></div>
+                        <div class="product-info">
+                            <div class="product-title">传统花卉纹样(商用授权)</div>
+                            <div class="product-author">作者: 孙传艺</div>
+                            <div class="product-price">¥1,500</div>
+                            <div class="product-actions">
+                                <button class="btn btn-outline">查看详情</button>
+                                <button class="btn btn-primary">购买版权</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 - 与 index.html 保持一致 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>“檐下风铃”致力于保护和传承中国传统扎染工艺，融合现代设计理念，打造一个充满活力的数字文化平台。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="ip-story.html">IP故事</a></li>
+                        <li><a href="knowledge.html">扎染工艺</a></li>
+                        <li><a href="pattern-library.html">纹样基因库</a></li>
+                        <li><a href="shop.html">文创商城</a></li>
+                        <li><a href="community.html">共创社区</a></li>
+                        <li><a href="about.html">关于平台</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-envelope-open-text"></i> </p>
+                    <p><i class="fas fa-phone"></i> 电话: +86 13924843248</p>
+                    <div class="social-icons">
+                        <a href="#" title="微信"><i class="fab fa-weixin"></i></a>
+                        <a href="#" title="微博"><i class="fab fa-weibo"></i></a>
+                        <a href="#" title="Bilibili"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 檐下风铃. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 移动菜单切换 - 合并自 index.html
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+
+            if (mobileMenuBtn && mobileNavMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true' || false;
+                    mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+                    mobileNavMenu.classList.toggle('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+            }
+
+            // 导航高亮 - 合并自 index.html
+            const currentLocation = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinksDesktop = document.querySelectorAll('.navbar .desktop-nav .nav-links a');
+            const navLinksMobile = document.querySelectorAll('.mobile-nav-menu .nav-links a');
+            function setActiveLink(links) {
+                links.forEach(link => {
+                    const linkPage = link.getAttribute('href').split('/').pop() || 'index.html';
+                    if (linkPage === currentLocation) {
+                        link.classList.add('active-link');
+                    } else {
+                        link.classList.remove('active-link');
+                    }
+                });
+            }
+            setActiveLink(navLinksDesktop);
+            setActiveLink(navLinksMobile);
+
+            // 筛选功能交互 - shop.html 独有
+            const categorySelect = document.getElementById('category');
+            const priceRangeSelect = document.getElementById('price-range');
+            const sortSelect = document.getElementById('sort');
+            const searchInput = document.getElementById('search');
+
+            function applyFilters() {
+                console.log('应用筛选条件:', {
+                    category: categorySelect.value,
+                    priceRange: priceRangeSelect.value,
+                    sort: sortSelect.value,
+                    search: searchInput.value
+                });
+                // 实际应用中这里应该发送请求到服务器获取筛选后的商品
+            }
+
+            categorySelect.addEventListener('change', applyFilters);
+            priceRangeSelect.addEventListener('change', applyFilters);
+            sortSelect.addEventListener('change', applyFilters);
+            document.querySelector('.search-box button').addEventListener('click', applyFilters); // 搜索按钮点击
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    applyFilters();
+                }
+            });
+
+            // 版权交易标签切换 - shop.html 独有
+            const copyrightTabs = document.querySelectorAll('.copyright-tabs .tab');
+            copyrightTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    copyrightTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    // 实际应用中这里应该切换显示不同类别的版权作品
+                });
+            });
+
+            // 收藏按钮交互 - shop.html 独有
+            const wishlistButtons = document.querySelectorAll('.btn-outline'); // 监听按钮本身
+            wishlistButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 阻止事件冒泡，以免影响其他元素
+                    const icon = this.querySelector('.fa-heart'); // 获取按钮内的图标
+                    if (icon) {
+                        icon.classList.toggle('far'); // 切换为空心
+                        icon.classList.toggle('fas'); // 切换为实心
+                        // 可以选择添加或移除一个类来改变颜色，例如 'text-danger'
+                        // icon.classList.toggle('text-danger');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

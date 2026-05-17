@@ -1,0 +1,74 @@
+﻿using System.Security.Claims;
+using FastEndpoints;
+using FastEndpoints.Security;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Riok.Mapperly.Abstractions;
+using ZaRan.Abstraction.Models.DbModels;
+using ZaRan.Services;
+
+namespace ZaRan.Endpoints.UsersEndpoints;
+
+public class UserLoginEndpoint(AppDbContext dbContext, IPasswordHasher<User> passwordHasher)
+    : Endpoint<UserLoginRequest, Results<Ok<UserLoginResponse>, UnauthorizedHttpResult, ForbidHttpResult>>
+{
+    public override void Configure()
+    {
+        Post("/user/login");
+        AllowAnonymous();
+    }
+
+    public override async Task<Results<Ok<UserLoginResponse>, UnauthorizedHttpResult, ForbidHttpResult>> ExecuteAsync(UserLoginRequest req, CancellationToken ct)
+    {
+        var dbUser = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == req.Account || u.UserName == req.Account, cancellationToken: ct);
+        if (dbUser is null)
+            return TypedResults.Unauthorized();
+        var passwordVerificationResult = passwordHasher.VerifyHashedPassword(dbUser, dbUser.HashedPassword, req.Password);
+        if (passwordVerificationResult == PasswordVerificationResult.Failed)
+            return TypedResults.Unauthorized();
+        if (dbUser.IsBanned)
+            return TypedResults.Forbid();
+        
+        // login successful
+        var token = JwtBearer.CreateToken(option =>
+        {
+            option.ExpireAt = DateTime.UtcNow.AddDays(1);
+            option.User.Roles.Add("Manager", "Auditor");
+            option.User.Claims.Add((ClaimTypes.NameIdentifier, dbUser.Id.ToString()));
+            option.User.Claims.Add((ClaimTypes.Name, dbUser.UserName));
+            if (dbUser.UserRole >= UserRole.Guest)
+                option.User.Roles.Add(nameof(UserRole.Guest));
+            if (dbUser.UserRole >= UserRole.User)
+                option.User.Roles.Add(nameof(UserRole.User));
+            if (dbUser.UserRole >= UserRole.Publisher)
+                option.User.Roles.Add(nameof(UserRole.Publisher));
+            if (dbUser.UserRole >= UserRole.Authorized)
+                option.User.Roles.Add(nameof(UserRole.Authorized));
+            if (dbUser.UserRole >= UserRole.Admin)
+                option.User.Roles.Add(nameof(UserRole.Admin));
+        });
+        dbUser.LastLoginAt = DateTimeOffset.Now;
+        dbContext.Users.Update(dbUser);
+        await dbContext.SaveChangesAsync(cancellationToken: ct);
+        var resp = UserLoginResponse.Map(dbUser);
+        resp.Token = token;
+        return TypedResults.Ok(resp);
+    }
+}
+
+public class UserLoginRequest
+{
+    public required string Account { get; set; }
+    public required string Password { get; set; }
+}
+
+[Mapper]
+public partial class UserLoginResponse : UserDetailResponse
+{
+    public string? Token { get; set; }
+    
+    [MapperIgnoreSource(nameof(User.Email))]
+    [MapperIgnoreTarget(nameof(UserLoginResponse.Token))]
+    public new static partial UserLoginResponse Map(User req);
+}

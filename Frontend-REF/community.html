@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>共创社区 - 檐下风铃扎染文化平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 页面头部 */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 内容区域 */
+        .page-content {
+            padding: 2rem 0;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+        }
+
+        /* 标签导航 */
+        .community-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--medium-gray-color);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .community-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            color: var(--primary-color);
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        /* 发帖区域 */
+        .create-post {
+            margin-bottom: 2rem;
+        }
+
+        .post-editor {
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .post-input {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+
+        .post-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(58, 123, 213, 0.2);
+        }
+
+        .post-input::placeholder {
+            color: var(--dark-gray-color);
+            opacity: 0.7;
+        }
+
+        .post-toolbar {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--medium-gray-color);
+            background-color: var(--light-color);
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .toolbar-button {
+            background: none;
+            border: none;
+            color: var(--dark-gray-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+            padding: 0.25rem;
+            border-radius: 4px;
+        }
+
+        .toolbar-button:hover {
+            color: var(--primary-color);
+            background-color: rgba(58, 123, 213, 0.1);
+        }
+
+        .post-submit {
+            padding: 0.5rem 1.25rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .post-submit:hover {
+            background-color: #2a68c4;
+            transform: translateY(-1px);
+        }
+
+        .post-submit:active {
+            transform: translateY(0);
+        }
+
+        /* 帖子列表 */
+        .posts-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .post-card {
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: box-shadow 0.3s;
+        }
+
+        .post-card:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .post-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            margin-right: 1rem;
+            background-size: cover;
+            flex-shrink: 0;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-user {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--dark-color);
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            color: var(--dark-gray-color);
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .post-time {
+            margin-right: 0.75rem;
+        }
+
+        .post-tag {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .post-content {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .post-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-image {
+            height: 180px;
+            background-color: var(--light-color);
+            background-size: cover;
+            background-position: center;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .post-image:hover {
+            transform: scale(1.02);
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-color);
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            color: var(--dark-gray-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .post-action:hover {
+            color: var(--primary-color);
+            background-color: rgba(58, 123, 213, 0.1);
+        }
+
+        .post-action i {
+            margin-right: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .post-action.active {
+            color: var(--accent-color-2);
+        }
+
+        /* 版权交易专区 */
+        .copyright-section {
+            background-color: rgba(58, 123, 213, 0.05);
+            border-left: 3px solid var(--primary-color);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .copyright-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .copyright-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-color);
+            background-color: transparent;
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(58, 123, 213, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #2a68c4;
+        }
+
+        /* 热门话题 */
+        .topics-section {
+            margin-top: 2rem;
+        }
+
+        .topics-section h3 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .topic-card {
+            padding: 1rem;
+            background-color: var(--light-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .topic-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .topic-posts {
+            font-size: 0.85rem;
+            color: var(--dark-gray-color);
+        }
+
+        /* 评论预览 */
+        .comments-preview {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-color);
+        }
+
+        .comment-preview {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            margin-right: 0.75rem;
+            background-size: cover;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-user {
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .comment-text {
+            font-size: 0.85rem;
+            color: var(--dark-gray-color);
+        }
+
+        .view-all-comments {
+            text-align: center;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .view-all-comments:hover {
+            color: #2a68c4;
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 3rem 0;
+            }
+
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .community-tabs {
+                padding-bottom: 0.5rem;
+            }
+
+            .tab {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .post-images {
+                grid-template-columns: 1fr;
+            }
+
+            .post-image {
+                height: 150px;
+            }
+
+            .topics-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+
+            .post-actions {
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header {
+                padding: 2rem 0;
+            }
+
+            .post-card {
+                padding: 1rem;
+            }
+
+            .post-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .post-actions {
+                gap: 0.75rem;
+                justify-content: space-between;
+            }
+
+            .post-action span {
+                display: none;
+            }
+
+            .post-action i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+
+            .copyright-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉容器 -->
+    <div id="header"></div>
+
+    <!-- 页面内容 -->
+    <main>
+        <div class="page-header">
+            <div class="container">
+                <h1>共创社区</h1>
+                <p>与扎染爱好者交流创意，共同创作</p>
+            </div>
+        </div>
+
+        <div class="page-content container">
+            <div class="section">
+                <!-- 标签导航 -->
+                <div class="community-tabs">
+                    <div class="tab active">全部</div>
+                    <div class="tab">热门</div>
+                    <div class="tab">最新</div>
+                    <div class="tab">关注</div>
+                    <div class="tab">问答</div>
+                    <div class="tab">教程</div>
+                    <div class="tab">作品展示</div>
+                    <div class="tab">版权交易</div>
+                    <div class="tab">活动</div>
+                </div>
+
+                <!-- 发帖区域 -->
+                <div class="create-post">
+                    <div class="post-editor">
+                        <textarea class="post-input" placeholder="分享你的创意、问题或作品..."></textarea>
+                        <div class="post-toolbar">
+                            <div class="toolbar-left">
+                                <button class="toolbar-button" title="添加图片"><i class="fas fa-image"></i></button>
+                                <button class="toolbar-button" title="添加标签"><i class="fas fa-tag"></i></button>
+                                <button class="toolbar-button" title="添加链接"><i class="fas fa-link"></i></button>
+                                <button class="toolbar-button" title="添加代码"><i class="fas fa-code"></i></button>
+                            </div>
+                            <button class="post-submit">发布</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 帖子列表 -->
+                <div class="posts-list">
+                    <!-- 帖子1 - 作品展示 -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background-image: url('https://via.placeholder.com/100/3A7BD5/FFFFFF?text=用户')"></div>
+                            <div class="post-user-info">
+                                <div class="post-user">染艺达人</div>
+                                <div class="post-meta">
+                                    <span class="post-time">2小时前</span>
+                                    <span class="post-tag">作品展示</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            刚刚完成了一组新的扎染作品，灵感来自传统云纹和现代几何的结合。使用了自贡扎染的捆扎技法和天然植物染料，整个制作过程耗时一周。大家觉得怎么样？欢迎交流创作心得！
+                        </div>
+                        <div class="post-images">
+                            <div class="post-image" style="background-image: url('https://via.placeholder.com/400x300/00A896/FFFFFF?text=扎染作品1')"></div>
+                            <div class="post-image" style="background-image: url('https://via.placeholder.com/400x300/F7B733/FFFFFF?text=扎染作品2')"></div>
+                            <div class="post-image" style="background-image: url('https://via.placeholder.com/400x300/8E44AD/FFFFFF?text=扎染作品3')"></div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">
+                                <i class="far fa-heart"></i>
+                                <span>24</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="far fa-comment"></i>
+                                <span>8</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="fas fa-share"></i>
+                                <span>分享</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="far fa-bookmark"></i>
+                                <span>收藏</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 帖子2 - 版权交易 -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background-image: url('https://via.placeholder.com/100/F7B733/FFFFFF?text=用户')"></div>
+                            <div class="post-user-info">
+                                <div class="post-user">纹样设计师</div>
+                                <div class="post-meta">
+                                    <span class="post-time">昨天</span>
+                                    <span class="post-tag">版权交易</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            我正在寻找合作伙伴，共同开发一系列扎染纹样。这些纹样融合了传统元素和现代设计语言，适合应用于服装、家居等领域。有意者请联系我！
+                        </div>
+                        <div class="copyright-section">
+                            <div class="copyright-title">版权交易信息</div>
+                            <p>授权类型: 商用授权</p>
+                            <p>授权范围: 服装、家居用品</p>
+                            <p>授权期限: 2年</p>
+                            <div class="copyright-buttons">
+                                <button class="btn btn-outline">我要版权</button>
+                                <button class="btn btn-primary">我卖版权</button>
+                            </div>
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action">
+                                <i class="far fa-heart"></i>
+                                <span>12</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="far fa-comment"></i>
+                                <span>5</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="fas fa-share"></i>
+                                <span>分享</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 帖子3 - 问答 -->
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-avatar" style="background-image: url('https://via.placeholder.com/100/8E44AD/FFFFFF?text=用户')"></div>
+                            <div class="post-user-info">
+                                <div class="post-user">扎染新手</div>
+                                <div class="post-meta">
+                                    <span class="post-time">3天前</span>
+                                    <span class="post-tag">问答</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            刚接触扎染，有没有推荐的入门教程和工具？特别是关于自贡扎染技法的。另外，在成都地区哪里可以买到质量好的扎染材料？谢谢大家！
+                        </div>
+                        <div class="post-actions">
+                            <div class="post-action active">
+                                <i class="fas fa-heart"></i>
+                                <span>32</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="far fa-comment"></i>
+                                <span>15</span>
+                            </div>
+                            <div class="post-action">
+                                <i class="fas fa-share"></i>
+                                <span>分享</span>
+                            </div>
+                        </div>
+
+                        <!-- 评论预览 -->
+                        <div class="comments-preview">
+                            <div class="comment-preview">
+                                <div class="comment-avatar" style="background-image: url('https://via.placeholder.com/100/3A7BD5/FFFFFF?text=用户')"></div>
+                                <div class="comment-content">
+                                    <div class="comment-user">染艺老手</div>
+                                    <div class="comment-text">成都荷花池市场有专门的扎染材料店，建议先从简单的捆扎工具和靛蓝染料开始...</div>
+                                </div>
+                            </div>
+                            <div class="view-all-comments">
+                                查看全部15条评论 <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 热门话题 -->
+                <div class="topics-section">
+                    <h3>热门话题</h3>
+                    <div class="topics-grid">
+                        <div class="topic-card">
+                            <div class="topic-name">#自贡扎染技法</div>
+                            <div class="topic-posts">128篇讨论</div>
+                        </div>
+                        <div class="topic-card">
+                            <div class="topic-name">#植物染料配方</div>
+                            <div class="topic-posts">76篇讨论</div>
+                        </div>
+                        <div class="topic-card">
+                            <div class="topic-name">#纹样设计大赛</div>
+                            <div class="topic-posts">53篇讨论</div>
+                        </div>
+                        <div class="topic-card">
+                            <div class="topic-name">#扎染作品展示</div>
+                            <div class="topic-posts">210篇讨论</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚容器 -->
+    <div id="footer"></div>
+
+    <script>
+        // 加载公共部分
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    // 初始化导航栏脚本
+                    initHeaderScripts();
+                })
+                .catch(error => {
+                    console.error('Error loading header:', error);
+                    document.getElementById('header').innerHTML = '<div class="container"><a href="index.html" class="logo">檐下风铃</a></div>';
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = '<footer><div class="container"><p>&copy; 2023 檐下风铃</p></div></footer>';
+                });
+
+            // 初始化社区页面功能
+            initCommunityPage();
+        });
+
+        // 初始化导航栏脚本
+        function initHeaderScripts() {
+            // 移动菜单切换
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+
+            if (mobileMenuBtn && mobileNavMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true' || false;
+                    mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+                    mobileNavMenu.classList.toggle('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+            }
+
+            // 导航高亮
+            const currentLocation = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinksDesktop = document.querySelectorAll('.navbar .desktop-nav .nav-links a');
+            const navLinksMobile = document.querySelectorAll('.mobile-nav-menu .nav-links a');
+
+            function setActiveLink(links) {
+                links.forEach(link => {
+                    const linkPage = link.getAttribute('href').split('/').pop() || 'index.html';
+                    if (linkPage === currentLocation) {
+                        link.classList.add('active-link');
+                    } else {
+                        link.classList.remove('active-link');
+                    }
+                });
+            }
+            setActiveLink(navLinksDesktop);
+            setActiveLink(navLinksMobile);
+        }
+
+        // 初始化社区页面功能
+        function initCommunityPage() {
+            // 标签切换功能
+            const tabs = document.querySelectorAll('.community-tabs .tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    // 实际应用中这里应该加载对应标签的内容
+                    console.log('切换到标签:', this.textContent);
+                    // 可以添加AJAX请求加载对应标签的内容
+                });
+            });
+
+            // 点赞功能
+            document.addEventListener('click', function(e) {
+                const likeBtn = e.target.closest('.post-action .fa-heart');
+                if (likeBtn) {
+                    e.preventDefault();
+                    const action = likeBtn.closest('.post-action');
+                    const countElement = action.querySelector('span');
+                    let currentCount = parseInt(countElement.textContent);
+
+                    if (likeBtn.classList.contains('fas')) {
+                        likeBtn.classList.remove('fas');
+                        likeBtn.classList.add('far');
+                        action.classList.remove('active');
+                        currentCount--;
+                    } else {
+                        likeBtn.classList.remove('far');
+                        likeBtn.classList.add('fas');
+                        action.classList.add('active');
+                        currentCount++;
+                    }
+                    countElement.textContent = currentCount;
+
+                    // 实际应用中这里应该发送请求到服务器更新点赞状态
+                    const postId = action.closest('.post-card').dataset.postId;
+                    if (postId) {
+                        // updateLikeStatus(postId, likeBtn.classList.contains('fas'));
+                    }
+                }
+            });
+
+            // 图片预览功能
+            const postImages = document.querySelectorAll('.post-image');
+            postImages.forEach(image => {
+                image.addEventListener('click', function() {
+                    // 实际应用中这里应该打开图片查看器或模态框
+                    const imageUrl = this.style.backgroundImage.replace('url("', '').replace('")', '');
+                    console.log('查看大图:', imageUrl);
+                    // openImageModal(imageUrl);
+                });
+            });
+
+            // 发布帖子功能
+            const postSubmit = document.querySelector('.post-submit');
+            const postInput = document.querySelector('.post-input');
+
+            if (postSubmit && postInput) {
+                postSubmit.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const content = postInput.value.trim();
+                    if (content) {
+                        // 实际应用中这里应该发送帖子内容到服务器
+                        console.log('发布帖子:', content);
+
+                        // 模拟发布成功后的操作
+                        postInput.value = '';
+
+                        // 显示成功消息
+                        showToast('帖子已发布成功！');
+
+                        // 可以在这里添加新帖子到列表顶部
+                        // addNewPost(content);
+                    } else {
+                        showToast('请输入帖子内容', 'error');
+                    }
+                });
+            }
+
+            // 查看全部评论
+            const viewComments = document.querySelector('.view-all-comments');
+            if (viewComments) {
+                viewComments.addEventListener('click', function() {
+                    // 实际应用中这里应该展开全部评论
+                    console.log('查看全部评论');
+                    // loadAllComments(postId);
+                });
+            }
+
+            // 版权交易按钮
+            const copyrightBtns = document.querySelectorAll('.copyright-buttons .btn');
+            copyrightBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const action = this.textContent.includes('我要版权') ? 'buy' : 'sell';
+                    console.log('版权交易操作:', action);
+                    // handleCopyrightAction(action);
+                });
+            });
+
+            // 热门话题点击
+            const topicCards = document.querySelectorAll('.topic-card');
+            topicCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    const topicName = this.querySelector('.topic-name').textContent;
+                    console.log('查看话题:', topicName);
+                    // navigateToTopic(topicName);
+                });
+            });
+        }
+
+        // 显示Toast消息
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 300);
+                }, 3000);
+            }, 100);
+        }
+
+        // 添加一些简单的样式到Toast
+        const toastStyle = document.createElement('style');
+        toastStyle.textContent = `
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 12px 24px;
+                border-radius: var(--border-radius);
+                background-color: var(--dark-color);
+                color: white;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                opacity: 0;
+                transition: opacity 0.3s;
+                z-index: 1000;
+            }
+            .toast.show {
+                opacity: 1;
+            }
+            .toast.success {
+                background-color: var(--secondary-color);
+            }
+            .toast.error {
+                background-color: var(--accent-color-2);
+            }
+        `;
+        document.head.appendChild(toastStyle);
+    </script>
+</body>
+</html>

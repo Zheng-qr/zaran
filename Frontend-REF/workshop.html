@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创意工坊 - 扎染文化数字平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+    <style>
+        :root {
+            /* 主品牌色 */
+    --primary-color: #3A7BD5;
+    --secondary-color: #00A896;
+    --accent-color-1: #F7B733;
+    --accent-color-2: #E85A4F;
+    --accent-color-3: #8E44AD;
+
+    /* 中性色 */
+    --light-color: #f8f9fa;
+    --medium-gray-color: #076cd1;
+    --dark-gray-color: #6c757d;
+    --dark-color: #2c3e50;
+
+    /* 文本颜色 */
+    --text-color: #343a40;
+    --text-light-color: #ffffff;
+
+    --border-radius: 6px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-color);
+            line-height: 1.7;
+            background-color: #f4f7f6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* 导航栏样式 */
+        .navbar {
+            background-color: var(--dark-color);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--accent-color-1);
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 15px;
+        }
+
+        .nav-links a {
+            color: var(--text-light-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color-1);
+        }
+
+        .user-actions a {
+            color: var(--text-light-color);
+            margin-left: 15px;
+            font-size: 1.2rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-light-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* 创意工坊主体样式 */
+        .workshop-container {
+            padding: 3rem 0;
+        }
+
+        .workshop-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* 画布区域 */
+        .canvas-container {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        /* 工具栏样式 */
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tool-btn {
+            padding: 8px 12px;
+            background: #f0f0f0;
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tool-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .tool-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .tool-btn i {
+            font-size: 1rem;
+        }
+
+        /* 画布样式 */
+        #design-canvas {
+            border: 1px solid var(--medium-gray-color);
+            margin-bottom: 20px;
+            display: block;
+            width: 100%;
+            height: 500px;
+            background: white;
+        }
+
+        /* 控制按钮 */
+        .canvas-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .canvas-controls input {
+            flex-grow: 1;
+            padding: 8px 15px;
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+        }
+
+        .canvas-controls button {
+            padding: 8px 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .canvas-controls button:hover {
+            background: #2a62b9;
+        }
+
+        /* 纹样库样式 */
+        .pattern-library {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .pattern-filter {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--medium-gray-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+        }
+
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+        }
+
+        .pattern-item {
+            border: 1px solid var(--medium-gray-color);
+            padding: 10px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .pattern-item:hover {
+            transform: scale(1.05);
+        }
+
+        .pattern-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        /* 版权声明 */
+        .copyright-notice {
+            background: #fff8e1;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .export-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .export-btn {
+            padding: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #2a62b9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .workshop-layout {
+                grid-template-columns: 1fr;
+            }
+
+            #design-canvas {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">檐下风铃</a>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="ip-story.html">IP故事</a></li>
+                <li><a href="knowledge.html">科普百科</a></li>
+                <li><a href="pattern-library.html">纹样基因库</a></li>
+                <li><a href="workshop.html">创意工坊</a></li>
+                <li><a href="shop.html">文创商城</a></li>
+                <li><a href="community.html">共创社区</a></li>
+                <li><a href="my.html">我的</a></li>
+            </ul>
+            <div class="user-actions">
+                <a href="user.html"><i class="fas fa-user"></i></a>
+                <a href="#"><i class="fas fa-envelope"></i></a>
+                <a href="about.html"><i class="fas fa-info-circle"></i></a>
+            </div>
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 创意工坊内容 -->
+    <main class="workshop-container">
+        <div class="container">
+            <h1>创意工坊</h1>
+            <p>使用纹样基因库中的元素创作您独特的扎染设计</p>
+
+            <div class="workshop-layout">
+                <!-- 画布区域 -->
+                <div class="canvas-container">
+                    <!-- 工具栏 -->
+                    <div class="toolbar">
+                        <button class="tool-btn active" id="select-tool" data-tool="select">
+                            <i class="fas fa-mouse-pointer"></i> 选择
+                        </button>
+                        <button class="tool-btn" id="brush-tool" data-tool="brush">
+                            <i class="fas fa-paint-brush"></i> 画笔
+                        </button>
+                        <button class="tool-btn" id="eraser-tool" data-tool="eraser">
+                            <i class="fas fa-eraser"></i> 橡皮
+                        </button>
+                        <button class="tool-btn" id="shape-tool" data-tool="shape">
+                            <i class="fas fa-square"></i> 形状
+                        </button>
+                        <button class="tool-btn" id="text-tool" data-tool="text">
+                            <i class="fas fa-font"></i> 文字
+                        </button>
+                        <input type="color" id="color-picker" value="#3A7BD5">
+                        <input type="range" id="brush-size" min="1" max="20" value="5">
+                        <span id="brush-size-value">5px</span>
+                    </div>
+
+                    <!-- 画布 -->
+                    <canvas id="design-canvas"></canvas>
+
+                    <!-- 控制按钮 -->
+                    <div class="canvas-controls">
+                        <input type="text" id="design-title" placeholder="为您的作品命名">
+                        <button id="save-btn">保存设计</button>
+                        <button id="undo-btn">撤销</button>
+                        <button id="redo-btn">重做</button>
+                        <button id="export-btn">导出作品</button>
+                    </div>
+
+                    <div class="copyright-notice">
+                        <p><i class="fas fa-info-circle"></i> 您在此创作的设计将受平台版权保护</p>
+                    </div>
+                </div>
+
+                <!-- 纹样库 -->
+                <div class="pattern-library">
+                    <h2>纹样基因库</h2>
+                    <select class="pattern-filter" id="pattern-filter">
+                        <option value="all">所有纹样</option>
+                        <option value="geometric">几何纹样</option>
+                        <option value="nature">自然纹样</option>
+                        <option value="abstract">抽象纹样</option>
+                    </select>
+
+                    <div class="pattern-grid" id="pattern-grid">
+                        <!-- 纹样将通过JS动态加载 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 导出模态框 -->
+    <div class="modal" id="export-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>导出作品</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <p>选择导出格式：</p>
+            <div class="export-options">
+                <button class="export-btn" id="export-png">PNG 图像</button>
+                <button class="export-btn" id="export-jpg">JPG 图像</button>
+                <button class="export-btn" id="export-svg">SVG 矢量图</button>
+                <button class="export-btn" id="export-json">JSON 数据</button>
+            </div>
+        </div>
+    </div>
+
+     <!-- 页脚 - 与 index.html 保持一致 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>关于我们</h3>
+                    <p>“檐下风铃”致力于保护和传承中国传统扎染工艺，融合现代设计理念，打造一个充满活力的数字文化平台。</p>
+                </div>
+                <div class="footer-section">
+                    <h3>快速链接</h3>
+                    <ul>
+                        <li><a href="ip-story.html">IP故事</a></li>
+                        <li><a href="knowledge.html">扎染工艺</a></li>
+                        <li><a href="pattern-library.html">纹样基因库</a></li>
+                        <li><a href="shop.html">文创商城</a></li>
+                        <li><a href="community.html">共创社区</a></li>
+                        <li><a href="about.html">关于平台</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>联系我们</h3>
+                    <p><i class="fas fa-envelope-open-text"></i> </p>
+                    <p><i class="fas fa-phone"></i> 电话: +86 13924843248</p>
+                    <div class="social-icons">
+                        <a href="#" title="微信"><i class="fab fa-weixin"></i></a>
+                        <a href="#" title="微博"><i class="fab fa-weibo"></i></a>
+                        <a href="#" title="Bilibili"><i class="fab fa-bilibili"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 檐下风铃. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化画布
+            const canvas = new fabric.Canvas('design-canvas', {
+                backgroundColor: '#ffffff',
+                preserveObjectStacking: true
+            });
+
+            // 设置画布尺寸
+            function resizeCanvas() {
+                const container = document.querySelector('.canvas-container');
+                canvas.setWidth(container.offsetWidth - 40); // 减去padding
+                canvas.setHeight(500); // 固定高度
+                canvas.renderAll();
+            }
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // 历史记录功能
+            const history = [];
+            let historyIndex = -1;
+
+            function saveState() {
+                // 如果在历史记录中间做了修改，丢弃后面的历史
+                if (historyIndex < history.length - 1) {
+                    history.length = historyIndex + 1;
+                }
+
+                const json = canvas.toJSON();
+                history.push(json);
+                historyIndex = history.length - 1;
+                updateUndoRedoButtons();
+            }
+
+            function updateUndoRedoButtons() {
+                document.getElementById('undo-btn').disabled = historyIndex <= 0;
+                document.getElementById('redo-btn').disabled = historyIndex >= history.length - 1;
+            }
+
+            // 初始保存空白状态
+            saveState();
+
+            // 画布事件监听
+            canvas.on('object:added', saveState);
+            canvas.on('object:modified', saveState);
+            canvas.on('object:removed', saveState);
+
+            // 撤销/重做功能
+            document.getElementById('undo-btn').addEventListener('click', function() {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    canvas.loadFromJSON(history[historyIndex], function() {
+                        canvas.renderAll();
+                        updateUndoRedoButtons();
+                    });
+                }
+            });
+
+            document.getElementById('redo-btn').addEventListener('click', function() {
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    canvas.loadFromJSON(history[historyIndex], function() {
+                        canvas.renderAll();
+                        updateUndoRedoButtons();
+                    });
+                }
+            });
+
+            // 工具切换功能
+            let currentTool = 'select';
+            const tools = {
+                select: function() {
+                    canvas.isDrawingMode = false;
+                    canvas.selection = true;
+                    canvas.forEachObject(obj => obj.selectable = true);
+                },
+                brush: function() {
+                    canvas.isDrawingMode = true;
+                    canvas.selection = false;
+                    canvas.freeDrawingBrush.color = document.getElementById('color-picker').value;
+                    canvas.freeDrawingBrush.width = parseInt(document.getElementById('brush-size').value);
+                },
+                eraser: function() {
+                    canvas.isDrawingMode = true;
+                    canvas.selection = false;
+                    canvas.freeDrawingBrush.color = '#ffffff';
+                    canvas.freeDrawingBrush.width = parseInt(document.getElementById('brush-size').value);
+                },
+                shape: function() {
+                    canvas.isDrawingMode = false;
+                    canvas.selection = false;
+                    // 点击画布添加形状
+                    canvas.on('mouse:down', function(options) {
+                        if (currentTool === 'shape' && options.target === null) {
+                            const rect = new fabric.Rect({
+                                left: options.pointer.x,
+                                top: options.pointer.y,
+                                width: 100,
+                                height: 100,
+                                fill: document.getElementById('color-picker').value,
+                                stroke: '#333',
+                                strokeWidth: 1
+                            });
+                            canvas.add(rect);
+                            canvas.setActiveObject(rect);
+                        }
+                    });
+                },
+                text: function() {
+                    canvas.isDrawingMode = false;
+                    canvas.selection = false;
+                    // 点击画布添加文本
+                    canvas.on('mouse:down', function(options) {
+                        if (currentTool === 'text' && options.target === null) {
+                            const text = new fabric.IText('双击编辑文字', {
+                                left: options.pointer.x,
+                                top: options.pointer.y,
+                                fontFamily: 'Arial',
+                                fill: document.getElementById('color-picker').value,
+                                fontSize: 20
+                            });
+                            canvas.add(text);
+                            canvas.setActiveObject(text);
+                        }
+                    });
+                }
+            };
+
+            // 工具按钮事件
+            document.querySelectorAll('[data-tool]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('[data-tool]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTool = this.dataset.tool;
+                    tools[currentTool]();
+                });
+            });
+
+            // 颜色选择器
+            document.getElementById('color-picker').addEventListener('change', function(e) {
+                if (currentTool === 'brush') {
+                    canvas.freeDrawingBrush.color = e.target.value;
+                }
+            });
+
+            // 画笔大小
+            document.getElementById('brush-size').addEventListener('input', function(e) {
+                const size = e.target.value;
+                document.getElementById('brush-size-value').textContent = size + 'px';
+                if (currentTool === 'brush' || currentTool === 'eraser') {
+                    canvas.freeDrawingBrush.width = parseInt(size);
+                }
+            });
+
+            // 纹样数据
+            const patterns = [
+                { id: 1, name: '螺旋纹', icon: 'fa-spinner', category: 'geometric',
+                  svgPath: 'M20,50 Q50,20 80,50 Q50,80 20,50 Z' },
+                { id: 2, name: '方格纹', icon: 'fa-border-all', category: 'geometric',
+                  svgPath: 'M25,25 H75 V75 H25 Z M35,35 V65 H65 V35 Z' },
+                { id: 3, name: '叶子', icon: 'fa-leaf', category: 'nature',
+                  svgPath: 'M50,10 Q60,30 50,50 Q40,30 50,10 Z M50,50 L50,90' },
+                { id: 4, name: '小猫爪印', icon: 'fa-paw', category: 'nature',
+                  svgPath: 'M40,60 Q50,40 60,60 Q50,80 40,60 Z M30,40 Q40,20 50,40 Q40,60 30,40 Z M50,40 Q60,20 70,40 Q60,60 50,40 Z M60,60 Q70,40 80,60 Q70,80 60,60 Z' },
+                { id: 5, name: '云朵', icon: 'fa-cloud', category: 'nature',
+                  svgPath: 'M20,50 Q30,30 50,30 Q70,30 80,50 Q90,50 90,60 Q90,70 80,70 Q70,90 50,90 Q30,90 20,70 Q10,70 10,60 Q10,50 20,50 Z' },
+                { id: 6, name: '水波', icon: 'fa-water', category: 'abstract',
+                  svgPath: 'M10,50 Q25,30 40,50 Q55,30 70,50 Q85,30 90,50' },
+                { id: 7, name: '扎染晕染', icon: 'fa-circle', category: 'abstract',
+                  svgPath: 'M50,10 A40,40 0 1,1 50,90 A40,40 0 1,1 50,10 Z M50,30 A20,20 0 1,0 50,70 A20,20 0 1,0 50,30 Z' },
+                { id: 8, name: '星空', icon: 'fa-star', category: 'abstract',
+                  svgPath: 'M50,10 L55,35 L80,35 L60,50 L65,75 L50,60 L35,75 L40,50 L20,35 L45,35 Z' }
+            ];
+            // workshop.html 中的 DOMContentLoaded 事件内添加
+// 初始化画布后添加...
+if (localStorage.getItem('selectedPattern')) {
+    const patternData = JSON.parse(localStorage.getItem('selectedPattern'));
+    localStorage.removeItem('selectedPattern'); // 清除存储
+
+    // 在画布中渲染纹样
+    addPatternToCanvas({
+        id: patternData.id,
+        name: patternData.title,
+        svgPath: patternData.svgPath
+    });
+
+    // 同时显示纹样图片作为参考
+    fabric.Image.fromURL(patternData.imgUrl, img => {
+        img.set({
+            left: 100,
+            top: 100,
+            scaleX: 0.3,
+            scaleY: 0.3
+        });
+        canvas.add(img);
+        canvas.renderAll();
+    });
+}
+            // 渲染纹样库
+            function renderPatterns(filteredPatterns) {
+                const grid = document.getElementById('pattern-grid');
+                grid.innerHTML = '';
+
+                filteredPatterns.forEach(pattern => {
+                    const item = document.createElement('div');
+                    item.className = 'pattern-item';
+                    item.innerHTML = `
+                        <div class="pattern-icon">
+                            <i class="fas ${pattern.icon}"></i>
+                        </div>
+                        <div>${pattern.name}</div>
+                    `;
+
+                    item.addEventListener('click', function() {
+                        addPatternToCanvas(pattern);
+                    });
+
+                    grid.appendChild(item);
+                });
+            }
+
+            // 添加纹样到画布
+            function addPatternToCanvas(pattern) {
+                fabric.loadSVGFromString(`
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <path d="${pattern.svgPath}" fill="${document.getElementById('color-picker').value}" />
+                    </svg>
+                `, function(objects, options) {
+                    const obj = fabric.util.groupSVGElements(objects, options);
+                    obj.set({
+                        left: canvas.width / 2,
+                        top: canvas.height / 2,
+                        originX: 'center',
+                        originY: 'center',
+                        name: pattern.name
+                    });
+                    canvas.add(obj);
+                    canvas.setActiveObject(obj);
+                });
+            }
+            // workshop.html 中修改 addPatternToCanvas 函数
+function addPatternToCanvas(pattern) {
+    if (pattern.svgPath) {
+        // SVG纹样处理
+        fabric.loadSVGFromString(`
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <path d="${pattern.svgPath}" fill="${document.getElementById('color-picker').value}" />
+            </svg>
+        `, function(objects, options) {
+            const obj = fabric.util.groupSVGElements(objects, options);
+            obj.set({
+                left: canvas.width / 2,
+                top: canvas.height / 2,
+                originX: 'center',
+                originY: 'center',
+                name: pattern.name
+            });
+            canvas.add(obj);
+            canvas.setActiveObject(obj);
+        });
+    } else {
+        // 普通图片纹样处理
+        fabric.Image.fromURL(pattern.imgUrl, img => {
+            img.set({
+                left: canvas.width / 2,
+                top: canvas.height / 2,
+                originX: 'center',
+                originY: 'center',
+                scaleX: 0.6,
+                scaleY: 0.6
+            });
+            canvas.add(img);
+            canvas.setActiveObject(img);
+        });
+    }
+}
+            // 纹样筛选
+            document.getElementById('pattern-filter').addEventListener('change', function() {
+                const category = this.value;
+                const filtered = category === 'all'
+                    ? patterns
+                    : patterns.filter(p => p.category === category);
+                renderPatterns(filtered);
+            });
+
+            // 初始渲染纹样
+            renderPatterns(patterns);
+
+            // 导出功能
+            const exportModal = document.getElementById('export-modal');
+            const closeModalBtn = document.querySelector('.close-modal');
+
+            document.getElementById('export-btn').addEventListener('click', function() {
+                exportModal.style.display = 'flex';
+            });
+
+            closeModalBtn.addEventListener('click', function() {
+                exportModal.style.display = 'none';
+            });
+
+            window.addEventListener('click', function(event) {
+                if (event.target === exportModal) {
+                    exportModal.style.display = 'none';
+                }
+            });
+
+            // 导出PNG
+            document.getElementById('export-png').addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.download = document.getElementById('design-title').value || 'design.png';
+                link.href = canvas.toDataURL({
+                    format: 'png',
+                    quality: 1
+                });
+                link.click();
+                exportModal.style.display = 'none';
+            });
+
+            // 导出JPG
+            document.getElementById('export-jpg').addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.download = document.getElementById('design-title').value || 'design.jpg';
+                link.href = canvas.toDataURL({
+                    format: 'jpeg',
+                    quality: 0.9
+                });
+                link.click();
+                exportModal.style.display = 'none';
+            });
+
+            // 导出SVG
+            document.getElementById('export-svg').addEventListener('click', function() {
+                const svg = canvas.toSVG();
+                const blob = new Blob([svg], {type: 'image/svg+xml'});
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = document.getElementById('design-title').value || 'design.svg';
+                link.href = url;
+                link.click();
+                exportModal.style.display = 'none';
+            });
+
+            // 导出JSON
+            document.getElementById('export-json').addEventListener('click', function() {
+                const json = JSON.stringify(canvas.toJSON());
+                const blob = new Blob([json], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = document.getElementById('design-title').value || 'design.json';
+                link.href = url;
+                link.click();
+                exportModal.style.display = 'none';
+            });
+
+            // 保存设计
+            document.getElementById('save-btn').addEventListener('click', function() {
+                const title = document.getElementById('design-title').value;
+                if (!title) {
+                    alert('请为您的作品命名');
+                    return;
+                }
+
+                // 在实际应用中，这里会发送数据到服务器
+                const designData = {
+                    title: title,
+                    data: canvas.toJSON(),
+                    timestamp: new Date().toISOString()
+                };
+
+                localStorage.setItem('design-' + Date.now(), JSON.stringify(designData));
+                alert('设计已保存到本地！');
+            });
+
+            // 初始化选择工具
+            tools.select();
+        });
+    </script>
+</body>
+</html>

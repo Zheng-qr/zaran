@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绞缬的故事 - 檐下风铃</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 绞缬故事页面特有样式 */
+        .character-hero {
+            background: linear-gradient(135deg, #3a1c71 0%, #d76d77 50%, #ffaf7b 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .character-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .character-hero .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            font-style: italic;
+            opacity: 0.9;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .character-content {
+            padding: 3rem 0;
+        }
+
+        .character-profile {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        .character-image {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+            background: linear-gradient(45deg, #f3f5f8, #e0e5ec);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .character-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .character-details {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .character-details h2 {
+            color: #3a1c71;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f4f8;
+        }
+
+        .detail-item {
+            margin-bottom: 1.2rem;
+        }
+
+        .detail-item h3 {
+            color: #d76d77;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .detail-item p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .story-sections {
+            margin-top: 3rem;
+        }
+
+        .story-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .story-section h2 {
+            color: #3a1c71;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+        }
+
+        .back-to-tie-dye {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #d76d77;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-to-tie-dye:hover {
+            color: #3a1c71;
+        }
+
+        @media (max-width: 768px) {
+            .character-profile {
+                grid-template-columns: 1fr;
+            }
+
+            .character-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉容器 -->
+    <div id="header"></div>
+
+    <!-- 绞缬英雄区域 -->
+    <section class="character-hero">
+        <div class="container">
+            <h1>绞缬 · 千叠染灵</h1>
+            <p class="subtitle">"我们不是染料与布料的幽灵，而是千年不散的匠心"</p>
+        </div>
+    </section>
+
+    <!-- 绞缬内容区域 -->
+    <section class="character-content container">
+        <div class="character-profile">
+            <div class="character-image">
+                <img src="image/jiaoxie.jpg" alt="绞缬人物形象" class="character-img">
+            </div>
+            <div class="character-details">
+                <h2><i class="fas fa-id-card"></i> 灵体档案</h2>
+
+                <div class="detail-item">
+                    <h3>身份</h3>
+                    <p>千叠冰纹染守护灵，沉睡千年的染灵首领</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>本源构成</h3>
+                    <p>诞生于唐代宗广德元年（公元763年），由12名染娘临终执念凝聚</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>外形特征</h3>
+                    <p>九色鹿形态，鹿角纹路随情绪变化，周身环绕淡淡靛蓝光晕</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>特殊能力</h3>
+                    <p>感知扎染技艺的传承状态，引导其他染灵苏醒，消耗自身灵力延缓盐夏的染疾发作</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>行为特征</h3>
+                    <p>厌恶机械复制品（靠近化纤布料会打喷嚏），月圆夜需浸泡在靛蓝草汁中维持形态，说谎时鹿角纹路会打结</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-sections">
+            <div class="story-section">
+                <h2><i class="fas fa-history"></i> 千年起源</h2>
+                <p>唐代盐商云集的自贡，染娘苏氏创"八技封灵术"—将毕生执念注入代表不同技法的纹样，化作守护染艺的灵体。绞缬作为其中最强大的染灵，由十二位技艺精湛的染娘在生命最后时刻共同创造。</p>
+                <p>这些染娘因长期接触染料和过度劳作而身患重病，却仍心系技艺传承。她们的执念与未完成的作品融合，化作了这只九色鹿形态的染灵。</p>
+            </div>
+
+            <div class="story-section">
+                <h2><i class="fas fa-user-friends"></i> 与盐夏的关系</h2>
+                <p>绞缬与盐夏家族有着千年的契约关系。唯有苏氏血脉能唤醒染灵，但每代传承者需以心血供养灵体，否则将遭染疾反噬。</p>
+                <p>绞缬对这位年轻的传承者既期待又担忧。它欣赏盐夏的天赋，却也为她对高阶技艺的抗拒而焦虑。随着盐夏染疾症状的提前显现，绞缬不得不消耗更多灵力来延缓这一过程，导致自身形态变得不稳定。</p>
+            </div>
+
+            <div class="story-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> 现代危机</h2>
+                <p>机械复制的扎染产品稀释了手艺的灵性，导致染灵力量不断衰弱。近十年无人施展完整古法，使得绞缬和其他染灵陷入濒死沉睡。</p>
+                <p>更严重的是，青蓝坊祖传的靛蓝灵泉被开发商填埋，建成了度假村。这处灵泉不仅是染灵力量的源泉，也是压制染疾的关键。失去灵泉后，绞缬必须在月圆之夜寻找替代的靛蓝草汁，否则将无法维持形态。</p>
+            </div>
+        </div>
+
+        <a href="story.html" class="back-to-tie-dye">
+            <i class="fas fa-arrow-left"></i> 返回扎染艺术故事
+        </a>
+    </section>
+
+    <!-- 页脚容器 -->
+    <div id="footer"></div>
+
+    <script>
+        // 加载公共部分
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    initHeaderScripts();
+                })
+                .catch(error => {
+                    console.error('Error loading header:', error);
+                    document.getElementById('header').innerHTML = '<div class="container"><a href="index.html" class="logo">檐下风铃</a></div>';
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = '<footer><div class="container"><p>&copy;檐下风铃</p></div></footer>';
+                });
+        });
+
+        function initHeaderScripts() {
+            const currentPage = 'jiaoxie-story.html';
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                const linkPage = link.getAttribute('href').split('/').pop();
+                if (linkPage === currentPage) {
+                    link.classList.add('active-link');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

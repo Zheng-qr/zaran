@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>盐夏的故事 - 檐下风铃</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 盐夏故事页面特有样式 */
+        .character-hero {
+            background: linear-gradient(135deg, #87a9ed 0%, #4b6cb7 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .character-hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .character-hero .subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .character-content {
+            padding: 3rem 0;
+        }
+
+        .character-profile {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 3rem;
+        }
+
+        .character-image {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .character-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .character-details {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .character-details h2 {
+            color: #182848;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f4f8;
+        }
+
+        .detail-item {
+            margin-bottom: 1.2rem;
+        }
+
+        .detail-item h3 {
+            color: #4b6cb7;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .detail-item p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .story-sections {
+            margin-top: 3rem;
+        }
+
+        .story-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .story-section h2 {
+            color: #182848;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-section p {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+        }
+
+        .back-to-tie-dye {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #4b6cb7;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .back-to-tie-dye:hover {
+            color: #182848;
+        }
+
+        @media (max-width: 768px) {
+            .character-profile {
+                grid-template-columns: 1fr;
+            }
+
+            .character-hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉容器 -->
+    <div id="header"></div>
+
+    <!-- 盐夏英雄区域 -->
+    <section class="character-hero">
+        <div class="container">
+            <h1>盐夏 · 青蓝坊的传承者</h1>
+            <p class="subtitle">"每一道蓝痕都是活着的记忆，而我，不过是染缸里浸泡太久的布料"</p>
+        </div>
+    </section>
+
+    <!-- 盐夏内容区域 -->
+    <section class="character-content container">
+        <div class="character-profile">
+            <div class="character-image">
+                <img src="image/yanxia1.jpg" alt="盐夏人物形象" class="character-img">
+            </div>
+            <div class="character-details">
+                <h2><i class="fas fa-id-card"></i> 人物档案</h2>
+
+                <div class="detail-item">
+                    <h3>身份</h3>
+                    <p>自贡百年扎染世家"青蓝坊"唯一传承者，美院染织专业毕业生</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>外貌特征</h3>
+                    <p>素色棉麻衣衫，长发用龍蓝扎染布条束起，指尖常年染有洗不净的蓝痕</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>性格特质</h3>
+                    <p><strong>坚忍：</strong>独自支撑濒临倒闭的青蓝坊，每日工作16小时维持生计</p>
+                    <p><strong>细腻：</strong>能通过布料肌理判断染料配比，对色彩极度敏感</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>专业技能</h3>
+                    <p>掌握217种古法植物染料配方（可凭气味辨别发酵程度）</p>
+                    <p>独创"呼吸染法"：通过调节呼吸频率控制布料吸色均匀度</p>
+                </div>
+
+                <div class="detail-item">
+                    <h3>致命缺陷</h3>
+                    <p>因心结无法施展家传绝技"千叠血引"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="story-sections">
+            <div class="story-section">
+                <h2><i class="fas fa-heart"></i> 心结与秘密</h2>
+                <p>盐夏内心深处认为母亲因扎染技艺积劳成疾而死，对家传秘技具有复杂矛盾情感。这种情感阻碍了她完全掌握家族最高技艺"千叠血引"。</p>
+                <p>更不为人知的是，家族女性继承者血脉中潜伏着"染疾"，25岁后身体会逐渐结晶化。这种病症需要染灵之力压制，但随着染灵力量衰弱，盐夏的症状已经开始提前显现。</p>
+            </div>
+
+            <div class="story-section">
+                <h2><i class="fas fa-ghost"></i> 与绞缬的关系</h2>
+                <p>盐夏与染灵首领绞缬有着微妙的共生契约关系。染灵靠传承者的信念存续，而传承者则需要染灵的力量压制染疾。</p>
+                <p>最初，盐夏对这位千年染灵充满戒备，但随着时间推移，她逐渐理解绞缬守护传统技艺的执着。然而，她对施展需要消耗生命力的高阶技艺仍心存抗拒。</p>
+            </div>
+
+            <div class="story-section">
+                <h2><i class="fas fa-exclamation-triangle"></i> 当前困境</h2>
+                <p>青蓝坊面临着三重危机：祖传靛蓝灵泉被开发商填埋；母亲去世导致高阶技艺传承断裂；近十年无人施展完整古法，导致染灵力量衰弱。</p>
+                <p>盐夏必须在染疾全面发作前找到解决办法，否则不仅会失去生命，千年传承的扎染技艺也将永远消失。</p>
+            </div>
+        </div>
+
+        <a href="story.html" class="back-to-tie-dye">
+            <i class="fas fa-arrow-left"></i> 返回扎染艺术故事
+        </a>
+    </section>
+
+    <!-- 页脚容器 -->
+    <div id="footer"></div>
+
+    <script>
+        // 加载公共部分
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    initHeaderScripts();
+                })
+                .catch(error => {
+                    console.error('Error loading header:', error);
+                    document.getElementById('header').innerHTML = '<div class="container"><a href="index.html" class="logo">檐下风铃</a></div>';
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = '<footer><div class="container"><p>&copy;檐下风铃</p></div></footer>';
+                });
+        });
+
+        function initHeaderScripts() {
+            const currentPage = 'yanxia.html';
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                const linkPage = link.getAttribute('href').split('/').pop();
+                if (linkPage === currentPage) {
+                    link.classList.add('active-link');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

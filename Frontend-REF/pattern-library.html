@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纹样基因库 - 扎染文化数字平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 页面头部 */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* 内容区域 */
+        .page-content {
+            padding: 2rem 0;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+        }
+
+        /* 搜索和筛选区域 */
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--light-gray-color);
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--medium-gray-color);
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-dropdown select {
+            padding: 10px 15px;
+            border: 1px solid var(--light-gray-color);
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        /* 文化卡片网格 */
+        .culture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 2rem;
+        }
+
+        .culture-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 5px solid var(--primary-color);
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+        }
+
+        .culture-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .culture-card:nth-child(2n) {
+            border-top-color: var(--secondary-color);
+        }
+
+        .culture-card:nth-child(3n) {
+            border-top-color: var(--accent-color-1);
+        }
+
+        /* 图片展示样式 */
+        .pattern-preview {
+            height: 220px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #f8f9fa;
+            position: relative;
+        }
+
+        .pattern-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s;
+            cursor: zoom-in;
+        }
+
+        .culture-card:hover .pattern-image {
+            transform: scale(1.05);
+        }
+
+        /* 文字内容区域 */
+        .culture-header {
+            padding: 20px;
+            background: white;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .culture-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .culture-card:nth-child(2n) .culture-icon {
+            color: var(--secondary-color);
+        }
+
+        .culture-card:nth-child(3n) .culture-icon {
+            color: var(--accent-color-1);
+        }
+
+        .culture-title {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .culture-desc {
+            color: var(--dark-gray-color);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .culture-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--medium-gray-color);
+            margin-top: auto;
+        }
+
+        .culture-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 贡献者部分 */
+        .contribute-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-top: 3rem;
+            text-align: center;
+            border-radius: 12px;
+        }
+
+        .contribute-section h2 {
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .contribute-section p {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .contribute-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 25px;
+            border: 2px solid white;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .contribute-btn:hover {
+            background-color: white;
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* 图片放大模态框 */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            cursor: zoom-out;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .image-modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 2001;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .culture-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 20px;
+            }
+
+            .culture-card {
+                height: 380px;
+            }
+
+            .pattern-preview {
+                height: 200px;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                min-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .culture-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .culture-card {
+                height: 360px;
+            }
+
+            .pattern-preview {
+                height: 180px;
+            }
+
+            .contribute-section {
+                padding: 2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉容器 -->
+    <div id="header"></div>
+
+    <!-- 主要内容 -->
+    <main class="container">
+        <h1>纹样基因库</h1>
+        <p>探索传统与现代扎染纹样的设计元素、文化内涵与演变历史</p>
+
+        <!-- 搜索和筛选区域 -->
+        <div class="filter-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="搜索纹样名称、作者或关键词..." id="search-input">
+            </div>
+            <div class="filter-options">
+                <div class="filter-dropdown">
+                    <select id="category-filter">
+                        <option value="">所有类别</option>
+                        <option value="传统">传统纹样</option>
+                        <option value="现代">现代创作</option>
+                        <option value="民族">民族特色</option>
+                        <option value="几何">几何图案</option>
+                    </select>
+                </div>
+                <div class="filter-dropdown">
+                    <select id="sort-by">
+                        <option value="popular">按热度排序</option>
+                        <option value="newest">按时间排序</option>
+                        <option value="downloads">按下载量排序</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 动态生成的纹样卡片容器 -->
+        <div class="culture-grid" id="pattern-container">
+            <!-- 卡片将通过JavaScript动态生成 -->
+        </div>
+
+        <!-- 贡献者部分 -->
+        <div class="contribute-section">
+            <div class="container">
+                <h2>拥有纹样想要分享？</h2>
+                <p>我们欢迎经过认证的文化传承者贡献内容</p>
+                <button class="contribute-btn" id="open-contribute-modal">
+                    <i class="fas fa-plus"></i> 申请成为贡献者
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 图片放大模态框 -->
+    <div class="image-modal" id="image-modal">
+        <span class="modal-close" id="modal-close">&times;</span>
+        <img src="" alt="" id="modal-image">
+    </div>
+
+    <!-- 页脚容器 -->
+    <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('pattern-container');
+            const searchInput = document.getElementById('search-input');
+            const categoryFilter = document.getElementById('category-filter');
+            const sortBy = document.getElementById('sort-by');
+            const imageModal = document.getElementById('image-modal');
+            const modalImage = document.getElementById('modal-image');
+            const modalClose = document.getElementById('modal-close');
+
+            // 示例数据 - 使用本地图片文件
+            const patternData = [
+                { id: 8823, title: "青旋", desc: "经典四川螺旋纹，层层叠叠，象征着生命的轮回与无限可能。", category: "传统" },
+                { id: 8824, title: "祥云漫卷", desc: "源自自贡的传统云纹，线条流畅飘逸，寓意吉祥如意。", category: "传统" },
+                { id: 8825, title: "格致新语", desc: "现代几何方格，融入自贡精细工艺，简约而不失雅致。", category: "现代" },
+                { id: 8826, title: "涟漪轻语", desc: "传统水波纹，细腻展现水的柔美动态，富有诗意与宁静感。", category: "传统" },
+                { id: 8827, title: "曜日之花", desc: "热情奔放的非洲太阳花纹样，象征光明、活力与希望。", category: "民族" },
+                { id: 8828, title: "蝶舞翩跹", desc: "自贡特色蝴蝶纹，色彩斑斓，寓意爱情美满、生活幸福。", category: "民族" },
+                { id: 8829, title: "鱼跃龙门", desc: "四川传统鱼纹，象征年年有余、吉祥喜庆，也寓意着努力拼搏。", category: "传统" },
+                { id: 8830, title: "像素浪潮", desc: "用户创作的现代像素风格波浪纹，将传统元素与数字艺术结合。", category: "现代" },
+                { id: 8831, title: "山水印象", desc: "传统山水画风格的扎染纹样，展现中国水墨画的意境。", category: "传统" },
+                { id: 8832, title: "民族图腾", desc: "融合多个少数民族图腾元素的现代设计作品。", category: "民族" },
+                { id: 8833, title: "星空幻想", desc: "现代抽象风格，灵感来自浩瀚星空与宇宙。", category: "现代" },
+                { id: 8838, title: "民族图腾", desc: "融合多个少数民族图腾元素的现代设计作品。", category: "民族" },
+                { id: 8839, title: "星空幻想", desc: "现代抽象风格，灵感来自浩瀚星空与宇宙。", category: "现代" },
+                { id: 9013, title: "祥云漫卷", desc: "源自大理白族的传统云纹，线条流畅飘逸，寓意吉祥如意。", category: "传统" },
+                { id: 9014, title: "格致新语", desc: "现代几何方格，融入日本絞り染め精细工艺，简约而不失雅致。", category: "几何" },
+                { id: 9015, title: "涟漪轻语", desc: "传统水波纹，细腻展现水的柔美动态，富有诗意与宁静感。", category: "传统" },
+                { id: 9016, title: "古韵新篇", desc: "传统纹样与现代设计语言的完美结合。", category: "现代" },
+                { id: 9017, title: "云山叠翠", desc: "层叠山峦与流动云雾的渐变扎染，模仿水墨皴法，营造深远空间感。", category: "传统" },
+                { id: 9018, title: "孤舟烟波", desc: "单只小舟点缀于朦胧水纹间，留白处如宣纸晕染，传递空寂禅意。", category: "传统" },
+                { id: 9019, title: "寒林远岫", desc: "枯笔技法表现的冬日疏林，远山淡墨虚化，呈现萧疏冷逸的宋画格调。", category: "传统" },
+                { id: 9020, title: "飞瀑生烟", desc: "瀑布线条虚实相生，水雾部分采用防染技法，似宣纸吸水后的自然渗化。", category: "传统" },
+                { id: 9022, title: "墨竹清风", desc: "文人墨竹风韵，扎染表现墨色层次，展现君子品格与文化气息。", category: "传统" },
+                { id: 9023, title: "荷塘月色", desc: "夏日荷塘的诗意描绘，月光洒向荷叶，营造宁静致远的东方美学。", category: "传统" },
+                { id: 9024, title: "梅雪争艳", desc: "梅花与白雪的对比美学，展现坚韧不屈的精神品格。", category: "传统" },
+                { id: 9025, title: "春江花月", desc: "春江潮水连海平，海上明月共潮生的诗意画面。", category: "传统" },
+                { id: 9026, title: "几何序列", desc: "现代数学美学在扎染工艺中的体现，规律与变化的完美统一。", category: "几何" },
+                { id: 9027, title: "抽象空间", desc: "突破传统束缚的现代抽象表达，色彩与形式的自由对话。", category: "现代" },
+                { id: 9028, title: "城市韵律", desc: "现代都市生活节奏在传统工艺中的诗意呈现。", category: "现代" },
+                { id: 9031, title: "彝族太阳", desc: "彝族传统太阳图腾，象征光明与希望的民族文化符号。", category: "民族" },
+                { id: 9032, title: "苗族银饰", desc: "苗族传统银饰图案的扎染演绎，精致繁复的民族工艺美学。", category: "民族" },
+                { id: 9033, title: "藏式祥云", desc: "藏传佛教艺术中的祥云纹样，庄严神圣的宗教美学。", category: "民族" },
+                { id: 9034, title: "傣族孔雀", desc: "傣族文化中的孔雀图案，优雅华丽的民族特色。", category: "民族" },
+                { id: 9035, title: "维族花毯", desc: "维吾尔族传统地毯图案，浓郁的西域风情。", category: "民族" },
+                { id: 9036, title: "蒙古云纹", desc: "蒙古族传统云纹图案，广阔草原的文化印记。", category: "民族" },
+                { id: 9037, title: "壮锦纹样", desc: "壮族传统壮锦图案，色彩绚烂的民族艺术。", category: "民族" },
+                { id: 9038, title: "朝鲜族花鸟", desc: "朝鲜族传统花鸟图案，清雅脱俗的民族美学。", category: "民族" },
+                { id: 9039, title: "土家织锦", desc: "土家族传统织锦图案，古朴厚重的民族文化。", category: "民族" },
+                { id: 9040, title: "回族几何", desc: "回族传统几何图案，简洁优美的伊斯兰艺术特色。", category: "几何" },
+                { id: 9041, title: "圆形变奏", desc: "以圆为基础的几何变化，展现数学之美。", category: "几何" },
+                { id: 9042, title: "三角韵律", desc: "三角形的重复与变化，构成富有节奏感的几何图案。", category: "几何" },
+                { id: 9043, title: "方格世界", desc: "方格的排列组合，简单中蕴含无限可能。", category: "几何" },
+                { id: 9044, title: "螺旋宇宙", desc: "螺旋线条的延展，象征宇宙的无限循环。", category: "几何" },
+                { id: 9045, title: "对称美学", desc: "对称图案的经典美学，平衡与和谐的视觉享受。", category: "几何" },
+                { id: 9046, title: "波浪起伏", desc: "波浪线条的律动美感，如海浪般的自然韵律。", category: "几何" },
+                { id: 9047, title: "蜂巢结构", desc: "蜂巢六边形的自然智慧，完美的几何结构。", category: "几何" },
+                { id: 9048, title: "星辰图案", desc: "星形图案的几何美学，闪耀的光芒效果。", category: "几何" },
+                { id: 9049, title: "菱形组合", desc: "菱形的多样组合，创造丰富的视觉层次。", category: "几何" },
+                { id: 9050, title: "点线面构成", desc: "点、线、面的基础构成元素，现代设计美学的体现。", category: "几何" },
+                { id: 9051, title: "渐变幻彩", desc: "色彩渐变的现代技法，如彩虹般的梦幻效果。", category: "现代" },
+                { id: 9052, title: "立体空间", desc: "三维空间感的二维表达，现代视觉艺术的探索。", category: "现代" },
+                { id: 9053, title: "解构重组", desc: "传统元素的解构与重组，后现代艺术的实验。", category: "现代" },
+                { id: 9054, title: "流体艺术", desc: "流体形态的艺术表达，自然与科技的结合。", category: "现代" },
+                { id: 9055, title: "像素世界", desc: "像素化的艺术表达，数字时代的美学符号。", category: "现代" },
+                { id: 9056, title: "全息投影", desc: "全息效果的视觉模拟，未来科技的艺术呈现。", category: "现代" },
+                { id: 9057, title: "分形几何", desc: "分形几何的自相似美学，数学与艺术的完美结合。", category: "现代" },
+                { id: 9058, title: "量子纠缠", desc: "量子物理概念的艺术化表达，科学与美学的对话。", category: "现代" },
+                { id: 9059, title: "生物形态", desc: "生物结构的仿生设计，自然形态的现代诠释。", category: "现代" },
+                { id: 9060, title: "时空扭曲", desc: "时空概念的视觉化表达，相对论的艺术想象。", category: "现代" },
+                { id: 9061, title: "虚拟现实", desc: "虚拟世界的视觉符号，数字化生存的艺术反思。", category: "现代" },
+                { id: 9062, title: "人工智能", desc: "AI时代的艺术表达，机器与人类创造力的融合。", category: "现代" },
+                { id: 9063, title: "区块链纹样", desc: "区块链技术的视觉化表达，去中心化的美学思考。", category: "现代" },
+                { id: 9064, title: "元宇宙空间", desc: "元宇宙概念的艺术呈现，虚拟与现实的边界探索。", category: "现代" },
+                { id: 9065, title: "新媒体艺术", desc: "新媒体技术在传统工艺中的应用，跨界融合的创新。", category: "现代" },
+                { id: 9066, title: "交互体验", desc: "交互设计理念的视觉表达，用户体验的艺术化。", category: "现代" },
+                { id: 9067, title: "未来考古", desc: "对未来的考古学想象，时间与空间的艺术思辨。", category: "现代" }
+            ];
+
+            let filteredData = [...patternData];
+
+            // 动态生成卡片
+            function generatePatternCards(data = filteredData) {
+                container.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+                setTimeout(() => {
+                    container.innerHTML = '';
+
+                    if (data.length === 0) {
+                        container.innerHTML = `
+                            <div class="no-results">
+                                <i class="fas fa-search"></i>
+                                <h3>未找到相关纹样</h3>
+                                <p>请尝试其他搜索关键词或筛选条件</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    data.forEach((pattern, index) => {
+                        const likes = Math.floor(Math.random() * 200) + 50;
+                        const downloads = Math.floor(likes * 0.6);
+                        const iconClass = index % 3 === 0 ? 'fa-palette' :
+                                        index % 3 === 1 ? 'fa-cloud' : 'fa-border-all';
+
+                        const imagePath = `image/IMG_${pattern.id}.JPG`;
+
+                        const card = document.createElement('div');
+                        card.className = 'culture-card';
+                        card.innerHTML = `
+                            <div class="pattern-preview">
+                                <img src="${imagePath}" alt="${pattern.title}纹样" class="pattern-image" data-id="${pattern.id}">
+                            </div>
+                            <div class="culture-header">
+                                <div class="culture-icon"><i class="fas ${iconClass}"></i></div>
+                                <h3 class="culture-title">${pattern.title}</h3>
+                                <p class="culture-desc">${pattern.desc}</p>
+                                <div class="culture-stats">
+                                    <span><i class="fas fa-heart"></i> ${likes}</span>
+                                    <span><i class="fas fa-download"></i> ${downloads}</span>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+
+                    addImageClickHandlers();
+                }, 500);
+            }
+
+            // 图片点击放大功能
+            function addImageClickHandlers() {
+                const images = document.querySelectorAll('.pattern-image');
+                images.forEach(img => {
+                    img.addEventListener('click', function() {
+                        modalImage.src = this.src;
+                        modalImage.alt = this.alt;
+                        imageModal.classList.add('show');
+                    });
+                });
+            }
+
+            // 关闭模态框
+            modalClose.addEventListener('click', () => {
+                imageModal.classList.remove('show');
+            });
+
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) {
+                    imageModal.classList.remove('show');
+                }
+            });
+
+            // 搜索功能
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterPatterns();
+            });
+
+            // 分类筛选
+            categoryFilter.addEventListener('change', function() {
+                filterPatterns();
+            });
+
+            // 排序功能
+            sortBy.addEventListener('change', function() {
+                filterPatterns();
+            });
+
+            // 综合筛选函数
+            function filterPatterns() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const category = categoryFilter.value;
+                const sortMethod = sortBy.value;
+
+                filteredData = patternData.filter(pattern => {
+                    const matchesSearch = pattern.title.toLowerCase().includes(searchTerm) ||
+                                         pattern.desc.toLowerCase().includes(searchTerm);
+                    const matchesCategory = !category || pattern.category === category;
+                    return matchesSearch && matchesCategory;
+                });
+
+                if (sortMethod === 'popular') {
+                    filteredData.sort((a, b) => Math.random() > 0.5 ? -1 : 1); // 模拟按热度排序
+                } else if (sortMethod === 'newest') {
+                    filteredData.sort((a, b) => b.id - a.id); // 按ID降序
+                } else if (sortMethod === 'downloads') {
+                    filteredData.sort((a, b) => Math.random() > 0.5 ? -1 : 1); // 模拟按下载量排序
+                }
+
+                generatePatternCards();
+            }
+
+            // 贡献者按钮点击事件
+            document.getElementById('open-contribute-modal').addEventListener('click', function() {
+                alert('感谢您的兴趣！贡献者申请功能即将开放。');
+            });
+
+            // 初始加载数据
+            generatePatternCards();
+        });
+
+        // 加载公共部分
+        function loadCommonParts() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading header:', error);
+                    document.getElementById('header').innerHTML = '<div class="container"><a href="index.html" class="logo">檐下风铃</a></div>';
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = '<footer><div class="container"><p>&copy; 2023 檐下风铃</p></div></footer>';
+                });
+        }
+        // pattern-library.html 中的 generatePatternCards 函数内
+const card = document.createElement('div');
+card.className = 'culture-card';
+
+// 添加点击事件处理
+card.addEventListener('click', function() {
+    const patternData = {
+        id: pattern.id,
+        title: pattern.title,
+        desc: pattern.desc,
+        imgUrl: `image/IMG_${pattern.id}.JPG`,
+        // 将实际在创意工坊中可用的SVG路径映射过来
+        svgPath: getSVGPathForPattern(pattern.id)
+    };
+
+    // 使用localStorage传递数据
+    localStorage.setItem('selectedPattern', JSON.stringify(patternData));
+    window.location.href = 'workshop.html';
+});
+
+function getSVGPathForPattern(id) {
+    // 这里建立基因库ID与创意工坊中SVG纹样的映射关系
+    const patternMap = {
+        8823: 'M20,50 Q50,20 80,50 Q50,80 20,50 Z',      // 螺旋纹
+        8824: 'M20,50 Q30,30 50,30 Q70,30 80,50 Q90,50 90,60 Q90,70 80,70 Q70,90 50,90 Q30,90 20,70 Q10,70 10,60 Q10,50 20,50 Z', // 云朵
+        8826: 'M10,50 Q25,30 40,50 Q55,30 70,50 Q85,30 90,50', // 水波
+        // 其他映射...
+    };
+    return patternMap[id] || ''; // 返回对应的SVG路径或空字符串
+}
+        loadCommonParts();
+    </script>
+</body>
+</html>

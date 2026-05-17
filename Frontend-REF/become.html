@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成为贡献者 - 檐下风铃</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        .contributor-section {
+            padding: 3rem 0;
+        }
+        .contributor-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .requirements {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header"></div>
+
+    <main class="contributor-section">
+        <div class="container">
+            <h1 style="text-align: center; margin-bottom: 1rem;">成为文化传承贡献者</h1>
+            <p style="text-align: center; margin-bottom: 2rem;">分享您的文化科普，共同守护非遗瑰宝</p>
+
+            <div class="contributor-form">
+                <form id="contributor-application">
+                    <div class="form-group">
+                        <label for="name">姓名</label>
+                        <input type="text" id="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">电子邮箱</label>
+                        <input type="email" id="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">联系电话</label>
+                        <input type="tel" id="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="culture-type">文化类型</label>
+                        <select id="culture-type" required>
+                            <option value="">请选择</option>
+                            <option value="tie-dye">扎染艺术</option>
+                            <option value="opera">戏曲文化</option>
+                            <option value="folk-art">民间工艺</option>
+                            <option value="other">其他</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">文化背景描述</label>
+                        <textarea id="description" rows="5" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">提交申请</button>
+                </form>
+
+                <div class="requirements">
+                    <h3>贡献者要求</h3>
+                    <ul>
+                        <li>具备相关文化领域的专业知识或传承背景</li>
+                        <li>承诺提供真实、准确的文化内容</li>
+                        <li>愿意参与社区互动和文化传播</li>
+                        <li>遵守平台内容规范和版权规定</li>
+                    </ul>
+                    <p>我们将在3-5个工作日内审核您的申请，并通过邮件通知结果。</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+
+            // 表单提交处理
+            document.getElementById('contributor-application').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('感谢您的申请！我们已收到您的信息，将会尽快与您联系。');
+                this.reset();
+            });
+        });
+    </script>
+</body>
+</html>

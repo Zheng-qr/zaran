@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>会员中心 - 檐下风铃</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 会员中心特有样式 */
+        .membership-container {
+            padding: 2rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .membership-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .membership-header h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .membership-header p {
+            color: var(--dark-gray-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 会员卡样式 */
+        .membership-card {
+            background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .membership-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .card-level {
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .card-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-user {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .user-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .user-info p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .card-points {
+            text-align: right;
+        }
+
+        .points-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .points-label {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* 进度条样式 */
+        .progress-section {
+            margin-bottom: 2rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-title {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .progress-next {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+            width: 65%; /* 实际使用时应该动态设置 */
+        }
+
+        .progress-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--medium-gray-color);
+        }
+
+        /* 会员特权部分 */
+        .benefits-section {
+            margin-bottom: 2rem;
+        }
+
+        .benefits-header {
+            margin-bottom: 1rem;
+        }
+
+        .benefits-title {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 1.2rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .benefit-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--primary-light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .benefit-desc {
+            color: var(--dark-gray-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* 会员等级部分 */
+        .levels-section {
+            margin-bottom: 2rem;
+        }
+
+        .levels-header {
+            margin-bottom: 1rem;
+        }
+
+        .levels-title {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 1.2rem;
+        }
+
+        .levels-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .levels-table th {
+            background: var(--primary-light-color);
+            color: var(--primary-color);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .levels-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+            color: var(--text-color);
+        }
+
+        .levels-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background: #f0f4f8;
+            color: var(--primary-color);
+        }
+
+        .current-level {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 任务部分 */
+        .tasks-section {
+            margin-bottom: 2rem;
+        }
+
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .tasks-title {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 1.2rem;
+        }
+
+        .tasks-view-all {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+
+        .task-list {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .task-item:last-child {
+            border-bottom: none;
+        }
+
+        .task-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .task-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f4f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            margin-right: 1rem;
+        }
+
+        .task-name {
+            font-weight: 500;
+            color: var(--text-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .task-points {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+        }
+
+        .task-action {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .task-action:hover {
+            background: var(--primary-dark-color);
+        }
+
+        .task-completed {
+            color: var(--success-color);
+            font-size: 0.9rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .membership-container {
+                padding: 1rem;
+            }
+
+            .card-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .card-points {
+                text-align: left;
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .levels-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页眉容器 -->
+    <div id="header"></div>
+
+    <!-- 会员中心内容 -->
+    <main class="membership-container">
+        <div class="membership-header">
+            <h1>会员中心</h1>
+            <p>尊享专属特权，提升会员等级，获取更多精彩内容</p>
+        </div>
+
+        <!-- 会员卡 -->
+        <div class="membership-card">
+            <div class="card-header">
+                <div class="card-title">檐下风铃会员</div>
+                <div class="card-level">黄金会员</div>
+            </div>
+            <div class="card-content">
+                <div class="card-user">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <h3>欢迎回来，用户</h3>
+                        <p>加入日期：2025-01-01</p>
+                    </div>
+                </div>
+                <div class="card-points">
+                    <div class="points-number">1,850</div>
+                    <div class="points-label">当前积分</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 成长进度 -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <div class="progress-title">成长进度</div>
+                <a href="#" class="progress-next">下一等级：白金会员 <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-details">
+                <span>还需150积分升级</span>
+                <span>65%</span>
+            </div>
+        </div>
+
+        <!-- 会员特权 -->
+        <div class="benefits-section">
+            <div class="benefits-header">
+                <div class="benefits-title">我的特权</div>
+            </div>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h4 class="benefit-title">专属内容</h4>
+                    <p class="benefit-desc">解锁扎染技艺独家教程、设计图稿和传统文化深度解析</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h4 class="benefit-title">购物折扣</h4>
+                    <p class="benefit-desc">享受青蓝坊扎染作品9折优惠及每月专属会员日特惠</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h4 class="benefit-title">活动优先</h4>
+                    <p class="benefit-desc">优先报名扎染工作坊、文化讲座及传承人见面会</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h4 class="benefit-title">生日礼遇</h4>
+                    <p class="benefit-desc">生日当月可获得定制扎染小样及双倍积分奖励</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 会员等级 -->
+        <div class="levels-section">
+            <div class="levels-header">
+                <div class="levels-title">会员等级</div>
+            </div>
+            <table class="levels-table">
+                <thead>
+                    <tr>
+                        <th>等级</th>
+                        <th>所需积分</th>
+                        <th>特权</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="level-badge">普通会员</span></td>
+                        <td>0-499</td>
+                        <td>基础内容访问</td>
+                    </tr>
+                    <tr>
+                        <td><span class="level-badge">白银会员</span></td>
+                        <td>500-1,499</td>
+                        <td>部分教程解锁</td>
+                    </tr>
+                    <tr>
+                        <td><span class="level-badge current-level">黄金会员</span></td>
+                        <td>1,500-2,999</td>
+                        <td>9折购物优惠</td>
+                    </tr>
+                    <tr>
+                        <td><span class="level-badge">白金会员</span></td>
+                        <td>3,000-5,999</td>
+                        <td>8折购物优惠</td>
+                    </tr>
+                    <tr>
+                        <td><span class="level-badge">钻石会员</span></td>
+                        <td>6,000+</td>
+                        <td>私人定制服务</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 每日任务 -->
+        <div class="tasks-section">
+            <div class="tasks-header">
+                <div class="tasks-title">每日任务</div>
+                <a href="#" class="tasks-view-all">查看全部</a>
+            </div>
+            <div class="task-list">
+                <div class="task-item">
+                    <div class="task-info">
+                        <div class="task-icon">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                        <div>
+                            <div class="task-name">每日签到</div>
+                            <div class="task-points">+10积分</div>
+                        </div>
+                    </div>
+                    <button class="task-action">签到</button>
+                </div>
+                <div class="task-item">
+                    <div class="task-info">
+                        <div class="task-icon">
+                            <i class="fas fa-comment"></i>
+                        </div>
+                        <div>
+                            <div class="task-name">发表评论</div>
+                            <div class="task-points">+20积分</div>
+                        </div>
+                    </div>
+                    <button class="task-action">去完成</button>
+                </div>
+                <div class="task-item">
+                    <div class="task-info">
+                        <div class="task-icon">
+                            <i class="fas fa-share-alt"></i>
+                        </div>
+                        <div>
+                            <div class="task-name">分享内容</div>
+                            <div class="task-points">+30积分</div>
+                        </div>
+                    </div>
+                    <div class="task-completed">
+                        <i class="fas fa-check-circle"></i> 已完成
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚容器 -->
+    <div id="footer"></div>
+
+    <script>
+        // 加载公共部分
+        document.addEventListener('DOMContentLoaded', function() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    initHeaderScripts();
+                })
+                .catch(error => {
+                    console.error('Error loading header:', error);
+                    document.getElementById('header').innerHTML = '<div class="container"><a href="index.html" class="logo">檐下风铃</a></div>';
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading footer:', error);
+                    document.getElementById('footer').innerHTML = '<footer><div class="container"><p>&copy; 2023 檐下风铃</p></div></footer>';
+                });
+        });
+
+        function initHeaderScripts() {
+            // 设置当前页面为活跃状态
+            const currentPage = 'membership.html';
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                const linkPage = link.getAttribute('href').split('/').pop();
+                if (linkPage === currentPage) {
+                    link.classList.add('active-link');
+                }
+            });
+
+            // 移动菜单切换
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const mobileNavMenu = document.querySelector('.mobile-nav-menu');
+            if (mobileMenuBtn && mobileNavMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const isExpanded = mobileMenuBtn.getAttribute('aria-expanded') === 'true' || false;
+                    mobileMenuBtn.setAttribute('aria-expanded', !isExpanded);
+                    mobileNavMenu.classList.toggle('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    if (icon) {
+                        icon.classList.toggle('fa-bars');
+                        icon.classList.toggle('fa-times');
+                    }
+                });
+            }
+        }
+
+        // 签到功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const signInBtn = document.querySelector('.task-action');
+            if (signInBtn && signInBtn.textContent === '签到') {
+                signInBtn.addEventListener('click', function() {
+                    // 发送AJAX请求到后端处理签到逻辑
+                    // 模拟成功签到
+                    signInBtn.textContent = '已签到';
+                    signInBtn.style.backgroundColor = '#4CAF50';
+                    signInBtn.disabled = true;
+
+                    // 提示用户
+                    alert('签到成功！获得10积分');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

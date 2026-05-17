@@ -1,0 +1,7 @@
+﻿services:
+  zaran:
+    image: zaran
+    build:
+      context: .
+      dockerfile: ZaRan/Dockerfile
+

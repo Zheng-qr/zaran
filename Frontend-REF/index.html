@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>檐下风铃 - 扎染文化数字平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 页面特有样式 */
+        /* --- 轮播Banner样式 --- */
+        .carousel-banner {
+            position: relative;
+            width: 100%;
+            height: 65vh;
+            min-height: 400px;
+            overflow: hidden;
+            background-color: var(--dark-gray-color);
+        }
+
+        .carousel-slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .carousel-slide {
+            min-width: 100%;
+            height: 100%;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-light-color);
+        }
+        .carousel-slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            max-width: 700px;
+        }
+
+        .slide-content h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            color: var(--text-light-color);
+        }
+
+        .slide-content p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        .slide-content .btn-slide {
+            padding: 12px 25px;
+            background-color: var(--accent-color-1);
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .slide-content .btn-slide:hover {
+            background-color: #e6a823;
+            transform: translateY(-2px);
+        }
+
+        /* 导航按钮 */
+        .carousel-prev,
+        .carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.5rem;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s;
+        }
+        .carousel-prev:hover,
+        .carousel-next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .carousel-prev {
+            left: 15px;
+        }
+        .carousel-next {
+            right: 15px;
+        }
+
+        /* 指示点 */
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            z-index: 10;
+        }
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .carousel-dot.active {
+            background-color: var(--text-light-color);
+            transform: scale(1.2);
+        }
+
+        /* 快速导航 */
+        .quick-nav {
+            padding: 3rem 0;
+        }
+        .quick-nav h2 {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2rem;
+            color: var(--dark-color);
+        }
+
+        .quick-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 25px;
+        }
+
+        .quick-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+            padding: 25px 15px;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .quick-nav-item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .quick-nav-item i {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            color: var(--primary-color);
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            border-radius: 50%;
+            background-color: #e7f0ff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .quick-nav-item:hover i {
+            background-color: var(--primary-color);
+            color: var(--text-light-color);
+        }
+        .quick-nav-item span {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+             .slide-content h1 {
+                font-size: 2.5rem;
+            }
+             .slide-content p {
+                font-size: 1rem;
+             }
+        }
+
+        @media (max-width: 768px) {
+            .carousel-banner {
+                height: 55vh;
+                min-height: 350px;
+            }
+            .slide-content h1 {
+                font-size: 1.8rem;
+            }
+            .slide-content p {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+            .slide-content .btn-slide {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .carousel-prev, .carousel-next {
+                padding: 10px;
+                font-size: 1.2rem;
+            }
+            .carousel-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .quick-nav-grid {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: 15px;
+            }
+            .quick-nav-item {
+                padding: 15px 10px;
+            }
+            .quick-nav-item i {
+                font-size: 2rem;
+                 width: 50px;
+                 height: 50px;
+                 line-height: 50px;
+            }
+             .quick-nav-item span {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 引入页眉 -->
+    <div id="header"></div>
+
+    <!-- 页面内容 -->
+    <main>
+        <!-- 轮播Banner区域 -->
+<section class="carousel-banner">
+    <div class="carousel-slides">
+        <!-- 幻灯片 1 -->
+        <div class="carousel-slide" style="background-image: url('image/IMG_8828.JPG');">
+            <div class="slide-content">
+                <h1>探索扎染的无尽魅力</h1>
+                <p>千年传承的指尖艺术，绽放现代生活的新色彩。</p>
+                <a href="knowledge.html" class="btn-slide">了解更多</a>
+            </div>
+        </div>
+        <!-- 幻灯片 2 -->
+        <div class="carousel-slide" style="background-image: url('image/IMG_8838.JPG');">
+            <div class="slide-content">
+                <h1>"檐下风铃"IP故事</h1>
+                <p>跟随主人公的脚步，体验一段关于守护与创新的传奇。</p>
+                <a href="ip-story.html" class="btn-slide">阅读故事</a>
+            </div>
+        </div>
+        <!-- 幻灯片 3 -->
+        <div class="carousel-slide" style="background-image: url('image/IMG_9053.JPG');">
+            <div class="slide-content">
+                <h1>加入创意工坊</h1>
+                <p>释放你的灵感，参与扎染纹样的共创与设计。</p>
+                <a href="workshop.html" class="btn-slide">开始创作</a>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-prev" aria-label="上一张"><i class="fas fa-chevron-left"></i></button>
+    <button class="carousel-next" aria-label="下一张"><i class="fas fa-chevron-right"></i></button>
+    <div class="carousel-dots">
+        <!-- JS会在这里生成指示点 -->
+    </div>
+</section>
+
+        <section class="quick-nav">
+            <div class="container">
+                <h2>快速导航</h2>
+                <div class="quick-nav-grid">
+                    <a href="ip-story.html" class="quick-nav-item">
+                        <i class="fas fa-book-reader"></i>
+                        <span>IP故事</span>
+                    </a>
+                    <a href="knowledge.html" class="quick-nav-item">
+                        <i class="fas fa-microscope"></i>
+                        <span>扎染工艺</span>
+                    </a>
+                    <a href="pattern-library.html" class="quick-nav-item">
+                        <i class="fas fa-dna"></i>
+                        <span>基因库</span>
+                    </a>
+                    <a href="workshop.html" class="quick-nav-item">
+                        <i class="fas fa-paint-brush"></i>
+                        <span>创意工坊</span>
+                    </a>
+                    <a href="shop.html" class="quick-nav-item">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>文创商城</span>
+                    </a>
+                    <a href="community.html" class="quick-nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>共创社区</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 引入页脚 -->
+    <div id="footer"></div>
+
+    <script>
+        // 加载公共部分
+        function loadCommonParts() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCommonParts();
+
+            // --- 轮播Banner JS ---
+            const slidesContainer = document.querySelector('.carousel-slides');
+            const slides = document.querySelectorAll('.carousel-slide');
+            const prevButton = document.querySelector('.carousel-prev');
+            const nextButton = document.querySelector('.carousel-next');
+            const dotsContainer = document.querySelector('.carousel-dots');
+
+            if (slidesContainer && slides.length > 0) {
+                let currentIndex = 0;
+                const totalSlides = slides.length;
+                let autoPlayInterval;
+
+                // 创建指示点
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('button');
+                    dot.classList.add('carousel-dot');
+                    dot.setAttribute('aria-label', `跳转到幻灯片 ${i + 1}`);
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        goToSlide(i);
+                        resetAutoPlay();
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+                const dots = document.querySelectorAll('.carousel-dot');
+
+                function updateCarousel() {
+                    slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentIndex);
+                    });
+                }
+
+                function goToSlide(index) {
+                    currentIndex = (index + totalSlides) % totalSlides;
+                    updateCarousel();
+                }
+
+                function nextSlide() {
+                    goToSlide(currentIndex + 1);
+                }
+
+                function prevSlide() {
+                    goToSlide(currentIndex - 1);
+                }
+
+                function startAutoPlay(interval = 5000) {
+                    autoPlayInterval = setInterval(nextSlide, interval);
+                }
+
+                function stopAutoPlay() {
+                    clearInterval(autoPlayInterval);
+                }
+
+                function resetAutoPlay(interval = 5000) {
+                    stopAutoPlay();
+                    startAutoPlay(interval);
+                }
+
+                if (prevButton) prevButton.addEventListener('click', () => {
+                    prevSlide();
+                    resetAutoPlay();
+                });
+                if (nextButton) nextButton.addEventListener('click', () => {
+                    nextSlide();
+                    resetAutoPlay();
+                });
+
+                // 鼠标悬停时停止自动播放
+                slidesContainer.addEventListener('mouseenter', stopAutoPlay);
+                slidesContainer.addEventListener('mouseleave', () => resetAutoPlay());
+
+                // 初始化
+                updateCarousel();
+                startAutoPlay();
+            }
+            // --- 结束 轮播Banner JS ---
+        });
+    </script>
+</body>
+</html>

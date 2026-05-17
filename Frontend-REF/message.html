@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息中心 - 檐下风铃</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="common.css">
+    <style>
+        /* 消息页面特有样式 */
+        .message-container {
+            padding: 2rem 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--light-gray-color);
+        }
+
+        .message-header h1 {
+            font-size: 1.8rem;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .message-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--light-gray-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .message-tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-color);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .message-tab.active {
+            color: var(--primary-color);
+        }
+
+        .message-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .message-tab:hover:not(.active) {
+            color: var(--primary-dark-color);
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+
+        .message-list {
+            display: none;
+        }
+
+        .message-list.active {
+            display: block;
+        }
+
+        .message-item {
+            padding: 1.2rem;
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .message-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-item.unread {
+            border-left: 4px solid var(--primary-color);
+            background-color: #f8f9fa;
+        }
+
+        .message-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-title {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin: 0;
+            font-size: 1.05rem;
+        }
+
+        .message-time {
+            color: var(--gray-color);
+            font-size: 0.85rem;
+        }
+
+        .message-content {
+            color: var(--text-color);
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .message-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.8rem;
+            padding-top: 0.8rem;
+            border-top: 1px dashed var(--light-gray-color);
+        }
+
+        .message-sender {
+            font-size: 0.85rem;
+            color: var(--gray-color);
+        }
+
+        .message-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .message-action {
+            background: none;
+            border: none;
+            color: var(--gray-color);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .message-action:hover {
+            color: var(--primary-color);
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--gray-color);
+        }
+
+        .empty-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--light-gray-color);
+        }
+
+        .empty-message p {
+            font-size: 1rem;
+            margin: 0.5rem 0;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .message-container {
+                padding: 1rem;
+            }
+
+            .message-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .message-tab {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .message-item {
+                padding: 1rem;
+            }
+
+            .message-title {
+                font-size: 1rem;
+            }
+
+            .message-content {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .message-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .message-tabs {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .message-tab {
+                flex: 1;
+                text-align: center;
+                padding: 0.5rem;
+            }
+
+            .message-item-header {
+                flex-direction: column;
+            }
+
+            .message-time {
+                margin-top: 0.3rem;
+                align-self: flex-end;
+            }
+
+            .message-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .message-actions {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 引入页眉 -->
+    <div id="header"></div>
+
+    <!-- 消息页面内容 -->
+    <main>
+        <div class="message-container">
+            <div class="message-header">
+                <h1><i class="fas fa-bell"></i> 消息中心</h1>
+                <button class="btn btn-primary" id="mark-all-read">
+                    <i class="fas fa-check-double"></i> 全部标记为已读
+                </button>
+            </div>
+
+            <div class="message-tabs">
+                <div class="message-tab active" data-tab="announcement">公告</div>
+                <div class="message-tab" data-tab="notification">通知消息</div>
+                <div class="message-tab" data-tab="interaction">互动消息</div>
+            </div>
+
+            <!-- 公告消息列表 -->
+            <div class="message-list active" id="announcement-list">
+                <div class="message-item unread">
+                    <div class="message-item-header">
+                        <h3 class="message-title">平台维护通知</h3>
+                        <span class="message-time">2025-05-07 14:30</span>
+                    </div>
+                    <div class="message-content">
+                        尊敬的会员，我们将在5月10日凌晨2:00-4:00进行系统维护升级，期间平台将暂时无法访问。请提前做好安排，给您带来的不便敬请谅解。
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">系统管理员</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-item-header">
+                        <h3 class="message-title">创意工坊新功能上线</h3>
+                        <span class="message-time">2025-04-28 10:15</span>
+                    </div>
+                    <div class="message-content">
+                        我们很高兴地宣布，创意工坊新增了"协作创作"功能！现在您可以邀请好友一起设计扎染图案，共同完成作品。快来体验吧！
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">产品团队</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-item-header">
+                        <h3 class="message-title">非遗扎染传承人线上讲座</h3>
+                        <span class="message-time">2025-04-20 09:00</span>
+                    </div>
+                    <div class="message-content">
+                        本周六下午3点，我们将邀请国家级非遗扎染传承人张大师进行线上讲座，分享传统扎染技艺的现代创新应用。预约链接已开放，名额有限，先到先得！
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">活动策划组</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 通知消息列表 -->
+            <div class="message-list" id="notification-list">
+                <div class="message-item unread">
+                    <div class="message-item-header">
+                        <h3 class="message-title">您的作品已通过审核</h3>
+                        <span class="message-time">2025-05-06 16:45</span>
+                    </div>
+                    <div class="message-content">
+                        您提交的作品《春之韵律》已通过审核，并已加入纹样基因库。感谢您的创作分享！
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">审核团队</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-item-header">
+                        <h3 class="message-title">版权交易成功通知</h3>
+                        <span class="message-time">2025-05-01 11:20</span>
+                    </div>
+                    <div class="message-content">
+                        您的作品《山水印象》已被用户"创意设计工作室"购买版权，交易金额¥680已打入您的账户余额。
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">交易系统</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-message" style="display: none;">
+                    <i class="fas fa-bell-slash"></i>
+                    <p>暂无新的通知消息</p>
+                    <p class="text-muted">当有新的通知时，我们会第一时间通知您</p>
+                </div>
+            </div>
+
+            <!-- 互动消息列表 -->
+            <div class="message-list" id="interaction-list">
+                <div class="message-item unread">
+                    <div class="message-item-header">
+                        <h3 class="message-title">有人喜欢了您的作品</h3>
+                        <span class="message-time">2025-05-08 08:30</span>
+                    </div>
+                    <div class="message-content">
+                        用户"染艺爱好者"喜欢了您的作品《蓝白交响曲》，快去看看吧！
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">社区系统</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-reply"></i> 回复</button>
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-item-header">
+                        <h3 class="message-title">新评论：您的作品《暮色》</h3>
+                        <span class="message-time">2025-05-05 19:12</span>
+                    </div>
+                    <div class="message-content">
+                        "扎染达人"评论了您的作品："这个渐变效果太棒了！请问是用什么技法实现的？"
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">社区系统</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-reply"></i> 回复</button>
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-item">
+                    <div class="message-item-header">
+                        <h3 class="message-title">协作邀请</h3>
+                        <span class="message-time">2025-04-30 14:05</span>
+                    </div>
+                    <div class="message-content">
+                        用户"设计小能手"邀请您参与协作创作项目《民族风系列》，点击查看详情。
+                    </div>
+                    <div class="message-footer">
+                        <span class="message-sender">创意工坊</span>
+                        <div class="message-actions">
+                            <button class="message-action"><i class="fas fa-check"></i> 接受</button>
+                            <button class="message-action"><i class="fas fa-times"></i> 拒绝</button>
+                            <button class="message-action"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 引入页脚 -->
+    <div id="footer"></div>
+
+    <script>
+        // 加载公共部分
+        function loadCommonParts() {
+            // 加载页眉
+            fetch('header.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header').innerHTML = data;
+                    // 设置消息图标为活动状态
+                    const messageIcon = document.querySelector('.nav-message');
+                    if (messageIcon) {
+                        messageIcon.classList.add('active');
+                    }
+                });
+
+            // 加载页脚
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                });
+        }
+
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCommonParts();
+
+            // 消息标签切换功能
+            const tabs = document.querySelectorAll('.message-tab');
+            const lists = document.querySelectorAll('.message-list');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 移除所有标签和列表的active类
+                    tabs.forEach(t => t.classList.remove('active'));
+                    lists.forEach(l => l.classList.remove('active'));
+
+                    // 为当前点击的标签和对应的列表添加active类
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabId}-list`).classList.add('active');
+                });
+            });
+
+            // 标记全部为已读
+            document.getElementById('mark-all-read').addEventListener('click', () => {
+                const unreadItems = document.querySelectorAll('.message-item.unread');
+                unreadItems.forEach(item => {
+                    item.classList.remove('unread');
+                });
+
+                // 显示操作成功的提示
+                alert('所有消息已标记为已读');
+            });
+
+            // 消息项点击事件
+            document.querySelectorAll('.message-item').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    // 如果点击的是操作按钮，则不执行
+                    if (e.target.closest('.message-actions')) {
+                        return;
+                    }
+
+                    // 标记为已读
+                    item.classList.remove('unread');
+
+                    // 这里可以添加跳转到消息详情的逻辑
+                    console.log('查看消息详情:', item.querySelector('.message-title').textContent);
+                });
+            });
+
+            // 删除消息功能
+            document.querySelectorAll('.message-action').forEach(button => {
+                if (button.innerHTML.includes('fa-trash')) {
+                    button.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const messageItem = this.closest('.message-item');
+                        if (confirm('确定要删除这条消息吗？')) {
+                            messageItem.style.opacity = '0';
+                            setTimeout(() => {
+                                messageItem.remove();
+
+                                // 检查当前列表是否为空
+                                const currentList = document.querySelector('.message-list.active');
+                                if (currentList.children.length === 0 ||
+                                    (currentList.children.length === 1 && currentList.querySelector('.empty-message'))) {
+                                    const emptyMessage = currentList.querySelector('.empty-message') ||
+                                        document.querySelector('.empty-message').cloneNode(true);
+                                    emptyMessage.style.display = 'block';
+                                    currentList.appendChild(emptyMessage);
+                                }
+                            }, 300);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
